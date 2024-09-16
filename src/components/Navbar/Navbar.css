@@ -1,0 +1,86 @@
+/* Base styles for the navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #333;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    z-index: 999;
+    align-items: center;
+    transition: transform 0.5s ease;
+}
+
+/* Navbar at the top */
+.navbar.top {
+    flex-direction: row; /* Horizontal layout */
+    justify-content: space-between; /* Space between each section */
+    width: 100%;
+    transform: translateY(0); /* Reset any transformations */
+}
+
+/* Navbar at the leftmost part */
+.navbar.left {
+    width: 200px;
+    height: 100vh;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 50px;
+    transform: translateX(0); /* Slide to left */
+}
+
+/* Navbar links */
+.navbar a {
+    flex-direction:row;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Logo Style */
+.navbar .logo {
+    font-size: 1.5em;
+    margin-right: auto;
+    width: 200px; /* Pushes the logo to the leftmost part */
+}
+
+/* Links for Upper Navigation */
+.navbar.top .nav-links {
+    display: flex;
+    /* flex-direction: row; */
+    justify-content: space-between; /* Distribute space evenly between items */
+    align-items: center;
+    flex: 1; /* Allows the links to take available space */
+}
+
+/* For Side Navigation (Align vertically) */
+.navbar.left .nav-links {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Button Style */
+.navbar .nav-links button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    padding: 10px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+/* Hover Effect for Buttons */
+.navbar .nav-links button:hover {
+    background-color: #575757;
+}
+
+/* Status box styles */
+.navbar .status-box {
+    background-color: #575757;
+    padding: 10px;
+    border-radius: 4px;
+    color: white;
+}
