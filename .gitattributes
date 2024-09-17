@@ -1,0 +1,7 @@
+# Ensure all text files use LF line endings
+* text=auto
+
+# Specify end-of-line normalization
+*.sh eol=lf
+*.bat eol=crlf
+*.md eol=lf
