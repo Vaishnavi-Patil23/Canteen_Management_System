@@ -1,51 +1,84 @@
 /* Base styles for the navbar */
 .navbar {
-    position: fixed;
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    transition: all 0.3s ease;
-    top: 0;
-  }
-  
-  /* Navbar at the top */
-  .navbar.top {
-    width: 100%;
-    flex-direction:row;
-    
-  }
-  
-  /* Navbar at the leftmost part */
-  .navbar.left {
-    height: 100%;
-    width: 100px; /* Adjust width as needed */
-    flex-direction: column;
-    align-items: flex-start;
-    top: 0;
-    left: 0;
-  }
-  
-  /* Navbar links */
-  .navbar a {
-    color: white;
-    padding: 10px;
-    text-decoration: none;
-    display: block;
-  }
-  
+  position: fixed;
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  transition: all 0.3s ease;
+  top: 0;
+}
 
-  /* Default content margin for the home page */
+/* Navbar at the top */
+.navbar.top {
+  width: 100%;
+}
+
+/* Navbar at the leftmost part */
+.navbar.left {
+  height: 100%;
+  width: 100px; /* Adjust width as needed */
+  flex-direction: column;
+  align-items: flex-start;
+  top: 0;
+  left: 0;
+}
+
+/* Navbar links */
+.navbar a {
+  color: white;
+  padding: 10px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Content margin to prevent overlap */
 .content {
-    margin-left: 0; /* No margin for home page */
-    transition: margin-left 0.3s ease; /* Smooth transition for margin change */
+  margin-top: 50px; /* Adjust based on navbar height when at the top */
+}
+
+/* Default content margin for the home page */
+.content {
+  margin-left: 10; /* No margin for home page */
+  transition: margin-left 0.3s ease; /* Smooth transition for margin change */
 }
 
 /* Content margin for other pages */
 .content.with-margin {
-    margin-left: 150px; /* Margin for non-home pages */
+  margin-left: 150px; /* Margin for non-home pages */
 }
 
-  
+.status-box {
+  padding: 10px 20px; /* Add padding for a box-like appearance */
+  border-radius: 4px; /* Rounded corners */
+  color: black; /* Text color (black for better contrast) */
+  cursor: pointer; /* Pointer cursor on hover */
+  text-align: center; /* Center text */
+  font-weight: bold; /* Make text bold */
+  transition: background-color 0.3s ease; /* Smooth color transition */
+  border: 1px solid #ccc; /* Optional border for better definition */
+}
+
+/* Light green for Open */
+.status-box.open {
+  background-color: #a5d6a7; /* Light green */
+  border-color: #81c784; /* Slightly darker green for the border */
+}
+
+/* Light red for Close */
+.status-box.close {
+  background-color: #ef9a9a; /* Light red */
+  border-color: #e57373; /* Slightly darker red for the border */
+}
+
+/* Hover and active states */
+.status-box:hover {
+  opacity: 0.9; /* Slightly faded on hover */
+}
+
+.status-box:active {
+  opacity: 0.7; /* More faded when clicked */
+}
+

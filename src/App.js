@@ -6,9 +6,11 @@ import YourOrder from './components/YourOrder';
 import Chat from './components/chat';
 import './App.css'; // For custom styles
 
+
 const Navigation = ({ setContentClass }) => {
   const location = useLocation();
   const [navPosition, setNavPosition] = useState('top');
+  const [status, setStatus] = useState('Open');
 
   useEffect(() => {
     if (location.pathname === '/') {
@@ -20,16 +22,21 @@ const Navigation = ({ setContentClass }) => {
     }
   }, [location.pathname, setContentClass]);
 
+  const toggleStatus = () => {
+    setStatus(prevStatus => (prevStatus === 'Open' ? 'Close' : 'Open'));
+  };
+
   return (
     <nav className={`navbar ${navPosition}`}>
       <div className="logo">Be Foodie</div>
-      <div className="nav-links">
+      {/* <div className="nav-links"> */}
         <Link to="/">Home</Link>
         <Link to="/menu">Menu</Link>
         <Link to="/your-order">Your Order</Link>
         <Link to="/chat">Chat</Link>
+        <div className={`status-box ${status.toLowerCase()}`} onClick={toggleStatus}>
+        {status}
       </div>
-      <div className="status-box">Open</div>
     </nav>
   );
 };

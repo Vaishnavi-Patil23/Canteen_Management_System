@@ -1,86 +1,80 @@
 /* Base styles for the navbar */
 .navbar {
     position: fixed;
-    top: 0;
-    width: 100%;
     background-color: #333;
     color: white;
+    padding: 10px;
     display: flex;
     justify-content: space-between;
-    padding: 10px;
+    align-items: center;
+    transition: all 0.3s ease;
     z-index: 999;
-    align-items: center;
-    transition: transform 0.5s ease;
-}
-
-/* Navbar at the top */
-.navbar.top {
-    flex-direction: row; /* Horizontal layout */
-    justify-content: space-between; /* Space between each section */
+  }
+  
+  /* Navbar at the top */
+  .navbar.top {
     width: 100%;
-    transform: translateY(0); /* Reset any transformations */
-}
-
-/* Navbar at the leftmost part */
-.navbar.left {
-    width: 200px;
-    height: 100vh;
+    flex-direction: row; /* Horizontal layout */
+  }
+  
+  /* Navbar on the left side */
+  .navbar.left {
+    height: 100%;
+    width: 200px; /* Adjust width as needed */
     flex-direction: column;
     align-items: flex-start;
-    padding-top: 50px;
-    transform: translateX(0); /* Slide to left */
-}
-
-/* Navbar links */
-.navbar a {
-    flex-direction:row;
-    color: white;
-    padding: 10px;
-    text-decoration: none;
-    display: block;
-}
-
-/* Logo Style */
-.navbar .logo {
-    font-size: 1.5em;
-    margin-right: auto;
-    width: 200px; /* Pushes the logo to the leftmost part */
-}
-
-/* Links for Upper Navigation */
-.navbar.top .nav-links {
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+  }
+  
+  /* Profile Section */
+  .navbar-profile {
     display: flex;
-    /* flex-direction: row; */
-    justify-content: space-between; /* Distribute space evenly between items */
     align-items: center;
-    flex: 1; /* Allows the links to take available space */
-}
-
-/* For Side Navigation (Align vertically) */
-.navbar.left .nav-links {
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-/* Button Style */
-.navbar .nav-links button {
+  }
+  
+  .profile-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 15px;
+  }
+  
+  /* Links Styling */
+  .navbar .nav-links {
+    display: flex;
+    gap: 10px; /* Space between buttons */
+  }
+  
+  .navbar .nav-links button {
     background-color: transparent;
     border: none;
     color: white;
     padding: 10px;
     font-size: 1em;
     cursor: pointer;
-}
-
-/* Hover Effect for Buttons */
-.navbar .nav-links button:hover {
+  }
+  
+  .navbar .nav-links button:hover {
     background-color: #575757;
-}
+  }
+  
+  /* Content Margin */
+  .content {
+    margin-top: 50px; /* Adjust based on navbar height when at the top */
+  }
+  
+  .content.with-margin {
+    margin-left: 200px; /* Margin for non-home pages */
+  }
+/* Add these styles to your Navbar.css file */
 
-/* Status box styles */
-.navbar .status-box {
-    background-color: #575757;
+.status-box {
+    background-color: #4CAF50; /* Green for Open
+    color: white;
     padding: 10px;
     border-radius: 4px;
-    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
+/* Status box styling */

@@ -1,10 +1,12 @@
 import React from 'react';
 import './Navbar.css';
 
-function Navbar({ position, onNavigationClick }) {
+function Navbar({ position, onNavigationClick, profileName }) {
   return (
     <div className={`navbar ${position}`}>
-      <div className="logo">Canteen Logo</div>
+      <div className="navbar-profile">
+        <span className="profile-name">{profileName}</span>
+      </div>
       <div className="nav-links">
         <button onClick={() => onNavigationClick('home')}>Home</button>
         <button onClick={() => onNavigationClick('menu')}>Menu</button>
