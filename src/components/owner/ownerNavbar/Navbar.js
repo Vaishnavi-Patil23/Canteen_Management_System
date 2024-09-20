@@ -12,6 +12,7 @@ function Navbar({ position, onNavigationClick, profileName }) {
         <button onClick={() => onNavigationClick('menu')}>Menu</button>
         <button onClick={() => onNavigationClick('your-order')}>Your Order</button>
         <button onClick={() => onNavigationClick('chat')}>Chat</button>
+        <button onClick={() => onNavigationClick('user')}>User</button>
       </div>
     </div>
   );

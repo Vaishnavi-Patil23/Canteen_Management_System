@@ -3,20 +3,20 @@ import React, { useState } from 'react';
 const OwnerDashboard = () => {
   const [orders, setOrders] = useState([
     {
-      customerName: 'John Doe',
+      customerName: 'Shamal',
       items: [
-        { name: 'Burger', price: 5, quantity: 2 },
-        { name: 'Fries', price: 3, quantity: 1 },
+        { name: 'Coffie', price: 10, quantity: 1 },
+        { name: 'Fries', price: 30, quantity: 1 },
       ],
       status: 'pending',
     },
     {
-      customerName: 'Jane Smith',
+      customerName: 'Om patil',
       items: [
-        { name: 'Pizza', price: 12, quantity: 1 },
-        { name: 'Soda', price: 2, quantity: 2 },
+        { name: 'Idali Sambhar', price: 150, quantity: 1 },
+        { name: 'Cold Coffie', price: 2, quantity: 2 },
       ],
-      status: 'in-progress',
+      status: 'pending',
     },
   ]);
 
@@ -49,14 +49,14 @@ const OwnerDashboard = () => {
               {order.items.map((item, idx) => (
                 <tr key={idx}>
                   <td style={styles.tableCell}>{item.name}</td>
-                  <td style={styles.tableCell}>${item.price}</td>
+                  <td style={styles.tableCell}>Rs. {item.price}</td>
                   <td style={styles.tableCell}>{item.quantity}</td>
-                  <td style={styles.tableCell}>${item.price * item.quantity}</td>
+                  <td style={styles.tableCell}>Rs. {item.price * item.quantity}</td>
                 </tr>
               ))}
               <tr>
                 <td colSpan="3" style={styles.tableCellTotal}>Total:</td>
-                <td style={styles.tableCell}>${calculateTotal(order.items)}</td>
+                <td style={styles.tableCell}>Rs. {calculateTotal(order.items)}</td>
               </tr>
             </tbody>
           </table>

@@ -1,5 +1,5 @@
 import React from 'react';
-import background from '../assets/hpage.jpg'; // Make sure the image path is correct
+import background from '../../assets/hpage.jpg'; // Make sure the image path is correct
 
 const Home = () => {
 

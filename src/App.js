@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useLocation } from 'react-router-dom';
-import Home from './components/Home';
-import Menu from './components/Menu';
-import YourOrder from './components/YourOrder';
-import Chat from './components/chat';
+import Home from './components/owner/ownerHome';
+import Menu from './components/owner/ownerMenu';
+import YourOrder from './components/owner/ownerOrders';
+import Chat from './components/owner/ownerchat';
+import User from './components/owner/ownerUser';
 import './App.css'; // For custom styles
 
 
@@ -34,6 +35,7 @@ const Navigation = ({ setContentClass }) => {
         <Link to="/menu">Menu</Link>
         <Link to="/your-order">Your Order</Link>
         <Link to="/chat">Chat</Link>
+        <Link to="/user">User</Link>
         <div className={`status-box ${status.toLowerCase()}`} onClick={toggleStatus}>
         {status}
       </div>
@@ -53,6 +55,7 @@ const App = () => {
           <Route path="/menu" element={<Menu />} />
           <Route path="/your-order" element={<YourOrder />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/user" element={<User />} />
         </Routes>
       </div>
     </Router>
