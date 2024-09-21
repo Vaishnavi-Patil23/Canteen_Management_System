@@ -1,14 +1,11 @@
 // src/components/RoleSelection.js
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const RoleSelection = ({ onRoleSelect }) => {
-    const navigate = useNavigate();
-
   const handleRoleSelect = (role) => {
     onRoleSelect(role);
-    navigate(role === 'owner' ? '/' : '/ustomer-menu'); // Change the path as needed
   };
+
   return (
     <div style={{ textAlign: 'center', marginTop: '80px' }}>
       <h1>Select Your Role</h1>

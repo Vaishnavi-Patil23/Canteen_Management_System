@@ -75,16 +75,23 @@ const App = () => {
     localStorage.setItem('userRole', selectedRole); // Save role to localStorage
   };
 
+
+  const handleLogout = () => {
+    setRole(null);
+    localStorage.removeItem('userRole'); // Remove role from localStorage
+  };
+
+  // Show RoleSelection component if no role is set
+  if (!role) {
+    return <RoleSelection onRoleSelect={handleRoleSelect} />;
+  }
   return (
     <Router>
-      <Navigation setContentClass={setContentClass} role={role} />
-      <div className={`content ${contentClass}`}>
-        {!role ? (
-          <RoleSelection onRoleSelect={handleRoleSelect} />
-        ) : (
-          <Routes>
-            {role === 'owner' ? (
-              <>
+    <Navigation setContentClass={setContentClass} role={role} onLogout={handleLogout} />
+    <div className={`content ${contentClass}`}>
+      <Routes>
+        {role === 'owner' ? (
+          <>
                 <Route path="/" element={<OwnerHome />} />
                 <Route path="/menu" element={<OwnerMenu />} />
                 <Route path="/your-order" element={<OwnerOrders />} />
@@ -101,7 +108,6 @@ const App = () => {
               </>
             )}
           </Routes>
-        )}
       </div>
     </Router>
   );
