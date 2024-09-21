@@ -8,7 +8,7 @@ function CustomNavbar({ position, profileName, profileImage, userType }) {
       <div className="logo">Be Foodie</div>
       <div className="nav-links">
         <button>Home</button>
-        <button>Cafe Menu</button>
+        <button>Menu</button>
         <button>Your Order</button>
         <button>Chat</button>
       </div>

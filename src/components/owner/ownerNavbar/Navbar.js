@@ -9,8 +9,8 @@ function Navbar({ position, onNavigationClick, profileName }) {
       </div>
       <div className="nav-links">
         <button onClick={() => onNavigationClick('home')}>Home</button>
-        <button onClick={() => onNavigationClick('menu')}>Menu</button>
-        <button onClick={() => onNavigationClick('your-order')}>Your Order</button>
+        <button onClick={() => onNavigationClick('menu')}>Manage Menu</button>
+        <button onClick={() => onNavigationClick('your-order')}>Orders</button>
         <button onClick={() => onNavigationClick('chat')}>Chat</button>
         <button onClick={() => onNavigationClick('user')}>User</button>
       </div>

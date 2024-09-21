@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const UserProfile = () => {
+  const navigate = useNavigate();
+
   // Example user data
   const [user, setUser] = useState({
-    name: "John Doe",       // Replace with dynamic user name
-    role: "Customer",       // Replace with dynamic user role
+    name: "Vaidik Chaudhary",       // Replace with dynamic user name
+    role: "Owner",       // Replace with dynamic user role
     photo: "https://via.placeholder.com/150" // Replace with user photo URL
   });
+
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem('userRole'); // Clear role or any session data if necessary
+    navigate('/role-selection'); // Redirect to role selection page
+  };
 
   // Inline styles
   const styles = {
@@ -38,6 +47,16 @@ const UserProfile = () => {
       color: 'gray',
       fontSize: '18px', // Larger font size
     },
+    logoutButton: {
+      marginTop: '20px',
+      padding: '10px 20px',
+      backgroundColor: 'red',
+      color: 'white',
+      border: 'none',
+      borderRadius: '5px',
+      cursor: 'pointer',
+      fontSize: '16px',
+    }
   };
 
   return (
@@ -46,6 +65,9 @@ const UserProfile = () => {
         <img src={user.photo} alt="User" style={styles.userPhoto} />
         <h2 style={styles.userName}>{user.name}</h2>
         <p style={styles.userRole}>{user.role}</p>
+        <button style={styles.logoutButton} onClick={handleLogout}>
+          Logout
+        </button>
       </div>
     </div>
   );
