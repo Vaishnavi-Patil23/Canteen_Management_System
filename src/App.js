@@ -39,8 +39,8 @@ const Navigation = ({ setContentClass, role }) => {
       <Link to="/">Home</Link>
       {role === 'owner' ? (
         <>
-          <Link to="/menu">Menu</Link>
-          <Link to="/your-order">Your Order</Link>
+          <Link to="/menu">Manage Menu</Link>
+          <Link to="/your-order">Orders</Link>
           <Link to="/chat">Chat</Link>
           <Link to="/user">User</Link>
         </>
@@ -79,6 +79,7 @@ const App = () => {
   const handleLogout = () => {
     setRole(null);
     localStorage.removeItem('userRole'); // Remove role from localStorage
+    // navigate('/'); 
   };
 
   // Show RoleSelection component if no role is set
@@ -97,6 +98,7 @@ const App = () => {
                 <Route path="/your-order" element={<OwnerOrders />} />
                 <Route path="/chat" element={<OwnerChat />} />
                 <Route path="/user" element={<OwnerUser />} />
+                {/* <Route path="/user" element={<OwnerUser onLogout={handleLogout} />} /> */}
               </>
             ) : (
               <>
@@ -105,6 +107,7 @@ const App = () => {
                 <Route path="/customer-orders" element={<CustomerOrders />} />
                 <Route path="/customer-chat" element={<CustomerChat />} />
                 <Route path="/customer-user" element={<CustomerUser />} />
+                {/* <Route path="/customer-user" element={<CustomerUser onLogout={handleLogout} />} /> */}
               </>
             )}
           </Routes>
