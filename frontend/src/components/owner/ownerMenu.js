@@ -1,24 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Menu = () => {
   const [menuItems, setMenuItems] = useState([
-    { name: 'Maggie', price: 30, available: true },
-    { name: 'Coffie', price: 10, available: true },
-    { name: 'Idali Sambhar', price: 35, available: true },
-    { name: 'Tea', price: 7, available: true },
+    // { name: 'Maggie', price: 30, available: true },
+    // { name: 'Coffie', price: 10, available: true },
+    // { name: 'Idali Sambhar', price: 35, available: true },
+    // { name: 'Tea', price: 7, available: true },
   ]);
 
   const [newItem, setNewItem] = useState({ name: '', price: '', available: true });
   const [editItem, setEditItem] = useState(null); // State for editing an item
   const [isEditing, setIsEditing] = useState(null); // Track the editing index
 
+  useEffect(() => {
+    const fetchMenuItems = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/menu');
+        const data = await response.json();
+        setMenuItems(data); // Assuming your backend sends the menu items as an array
+      } catch (error) {
+        console.error('Error fetching menu items:', error);
+      }
+    };
+    
+    fetchMenuItems();
+  }, []);
+
   // Handler to add a new item
-  const handleAddItem = () => {
+  const handleAddItem = async () => {
     if (newItem.name && newItem.price) {
-      setMenuItems([...menuItems, newItem]);
-      setNewItem({ name: '', price: '', available: true });
+      try {
+        const response = await fetch('http://localhost:3000/api/menu', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: newItem.name,
+            price: newItem.price,
+            available: newItem.available,
+          }),
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          console.log(result.message); // Success message
+          const updatedResponse = await fetch('http://localhost:3000/api/menu');
+          const updatedData = await updatedResponse.json();
+          // Update the menuItems state with the new item
+          setMenuItems(updatedData);
+          setNewItem({ name: '', price: '', available: true });
+        } else {
+          console.error('Failed to add menu item');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
   };
+  
 
   // Handler to remove an item
   const handleRemoveItem = (index) => {
@@ -139,7 +179,7 @@ const Menu = () => {
           style={styles.input}
         />
         <input
-          type="text"
+          type="number"
           placeholder="Price"
           value={newItem.price}
           onChange={(e) => setNewItem({ ...newItem, price: e.target.value })}
@@ -180,7 +220,7 @@ const Menu = () => {
                     style={styles.input}
                   />
                 ) : (
-                  item.name
+                  item.itemName
                 )}
               </td>
               <td style={styles.td}>
@@ -192,7 +232,7 @@ const Menu = () => {
                     style={styles.input}
                   />
                 ) : (
-                  item.price
+                  item.itemPrice
                 )}
               </td>
               <td style={styles.td}>
@@ -206,7 +246,7 @@ const Menu = () => {
                     <option value="No">Not Available</option>
                   </select>
                 ) : (
-                  item.available ? 'Yes' : 'No'
+                  item.Availability ? 'Yes' : 'No'
                 )}
               </td>
               <td style={styles.td}>
