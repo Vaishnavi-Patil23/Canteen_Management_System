@@ -1,33 +1,90 @@
+//displaying done, add order is incomplete
 import React, { useState, useEffect } from 'react';
 
 const MenuPage = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [order, setOrder] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [quantities, setQuantities] = useState({});
 
   useEffect(() => {
-    // Mocking backend API data for menu items
-    const mockMenuItems = [
-      { _id: 1, name: 'Pizza', price: 10, available: true },
-      { _id: 2, name: 'Burger', price: 5, available: false },
-      { _id: 3, name: 'Pasta', price: 8, available: true },
-      { _id: 4, name: 'Fries', price: 3, available: true },
-      { _id: 5, name: 'Coffie', price: 10, available: true },
-    ];
+    const fetchMenuItems = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/menu');
+        const data = await response.json();
+        setMenuItems(data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching menu items:', error);
+        setLoading(false);
+      }
+    };
 
-    setTimeout(() => {
-      setMenuItems(mockMenuItems);
-      setLoading(false);
-    }, 1000);
+    fetchMenuItems();
   }, []);
 
-  // Add an item to the order with selected quantity
   const addToOrder = (item, quantity) => {
     if (quantity > 0 && item.available) {
-      setOrder([...order, { ...item, quantity }]);
+      const orderItem = { ...item, quantity };
+      setOrder([...order, orderItem]);
+    } else {
+      alert('Please select a valid quantity!');
     }
   };
 
+  const handleQuantityChange = (id, value) => {
+    setQuantities(prevQuantities => ({
+      ...prevQuantities,
+      [id]: value,
+    }));
+  };
+
+  const addOrder = async () => {
+    if (order.length === 0) {
+      alert('No items in the order');
+      return;
+    }
+  
+    const customerName = prompt('Please enter your name for the order');
+    if (!customerName) {
+      alert('Customer name is required');
+      return;
+    }
+  
+    // Create an array to hold the order items
+    const orderItems = order.map(item => ({
+      itemName: item.name,           // Make sure this field is included
+      price: item.price,             // Make sure this field is included
+      quantity: item.quantity,       // Make sure this field is included
+      totalAmount: item.price * item.quantity, // Calculate total amount
+      status: 'pending', 
+      customerName: customerName             // Set default status
+    }));
+  
+    try {
+      const response = await fetch('http://localhost:3000/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderItems),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to add the order');
+      }
+  
+      const data = await response.json();
+      console.log('Order added successfully:', data);
+      setOrder([]); // Reset the order after adding it
+      alert('Order added successfully!');
+    } catch (error) {
+      console.error('Error adding order:', error);
+      alert('Failed to add the order: ' + error.message);
+    }
+  };
+  
   if (loading) return <div>Loading...</div>;
 
   return (
@@ -38,12 +95,10 @@ const MenuPage = () => {
           <div key={item._id} style={styles.menuItem}>
             <h2>{item.name}</h2>
             <p>Price: ${item.price}</p>
-            {/* Show availability */}
             <p style={item.available ? styles.available : styles.unavailable}>
               {item.available ? 'Available' : 'Unavailable'}
             </p>
 
-            {/* Quantity input */}
             {item.available && (
               <div style={styles.orderSection}>
                 <label htmlFor={`quantity_${item._id}`}>Quantity:</label>
@@ -52,14 +107,15 @@ const MenuPage = () => {
                   id={`quantity_${item._id}`}
                   min="1"
                   max="10"
-                  defaultValue="1"
+                  value={quantities[item._id] || 1} // Controlled input
+                  onChange={(e) => handleQuantityChange(item._id, e.target.value)}
                   style={styles.quantityInput}
                 />
                 <button
                   style={styles.addButton}
                   onClick={() => {
-                    const quantity = document.getElementById(`quantity_${item._id}`).value;
-                    addToOrder(item, Number(quantity));
+                    const quantity = Number(quantities[item._id] || 1); // Use state quantity
+                    addToOrder(item, quantity);
                   }}
                 >
                   Add to Order
@@ -70,7 +126,6 @@ const MenuPage = () => {
         ))}
       </div>
 
-      {/* Display current order */}
       <div style={styles.orderSummary}>
         <h2>Current Order</h2>
         {order.length === 0 ? (
@@ -85,11 +140,13 @@ const MenuPage = () => {
           </ul>
         )}
       </div>
+      <button style={styles.addOrderButton} onClick={addOrder}>
+        Add Order
+      </button>
     </div>
   );
 };
-
-// CSS Styling
+// CSS Styling remains the same
 const styles = {
   container: {
     padding: '20px',
@@ -129,6 +186,15 @@ const styles = {
     marginLeft: '10px',
     padding: '5px 10px',
     backgroundColor: '#28a745',
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+  },
+  addOrderButton: {
+    marginTop: '20px',
+    padding: '10px 20px',
+    backgroundColor: '#007bff',
     color: 'white',
     border: 'none',
     borderRadius: '5px',

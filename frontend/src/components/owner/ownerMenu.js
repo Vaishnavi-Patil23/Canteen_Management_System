@@ -1,28 +1,24 @@
+//done
 import React, { useState, useEffect } from 'react';
 
 const Menu = () => {
-  const [menuItems, setMenuItems] = useState([
-    // { name: 'Maggie', price: 30, available: true },
-    // { name: 'Coffie', price: 10, available: true },
-    // { name: 'Idali Sambhar', price: 35, available: true },
-    // { name: 'Tea', price: 7, available: true },
-  ]);
-
+  const [menuItems, setMenuItems] = useState([]);
   const [newItem, setNewItem] = useState({ name: '', price: '', available: true });
-  const [editItem, setEditItem] = useState(null); // State for editing an item
-  const [isEditing, setIsEditing] = useState(null); // Track the editing index
+  const [editItem, setEditItem] = useState(null);
+  const [isEditing, setIsEditing] = useState(null);
 
+  // Fetch menu items from the backend
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/menu');
+        const response = await fetch('http://localhost:3000/menu');
         const data = await response.json();
-        setMenuItems(data); // Assuming your backend sends the menu items as an array
+        setMenuItems(data);
       } catch (error) {
         console.error('Error fetching menu items:', error);
       }
     };
-    
+
     fetchMenuItems();
   }, []);
 
@@ -30,56 +26,67 @@ const Menu = () => {
   const handleAddItem = async () => {
     if (newItem.name && newItem.price) {
       try {
-        const response = await fetch('http://localhost:3000/api/menu', {
+        const response = await fetch('http://localhost:3000/menu', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            name: newItem.name,
-            price: newItem.price,
-            available: newItem.available,
-          }),
+          body: JSON.stringify(newItem),
         });
-  
-        if (response.ok) {
-          const result = await response.json();
-          console.log(result.message); // Success message
-          const updatedResponse = await fetch('http://localhost:3000/api/menu');
-          const updatedData = await updatedResponse.json();
-          // Update the menuItems state with the new item
-          setMenuItems(updatedData);
-          setNewItem({ name: '', price: '', available: true });
-        } else {
-          console.error('Failed to add menu item');
-        }
+        const data = await response.json();
+        setMenuItems([...menuItems, data]);
+        setNewItem({ name: '', price: '', available: true });
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error adding item:', error);
       }
+    }
+  };
+
+  // Handler to save the edited item
+  const handleSaveEdit = async (index) => {
+    try {
+      const response = await fetch(`http://localhost:3000/menu/${menuItems[index]._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(editItem),
+      });
+      const data = await response.json();
+      const updatedMenu = [...menuItems];
+      updatedMenu[index] = data;
+      setMenuItems(updatedMenu);
+      setIsEditing(null);
+      setEditItem(null);
+    } catch (error) {
+      console.error('Error editing item:', error);
+    }
+  };
+  
+  // Check that handleEditItem is defined properly
+const handleEditItem = (index) => {
+  setIsEditing(index); // Set the index for editing
+  setEditItem(menuItems[index]); // Store the item being edited
+};
+
+// Use it inside your component, ensuring it’s defined before usage
+
+  // Handler to remove an item
+  const handleRemoveItem = async (index) => {
+    try {
+      const response = await fetch(`http://localhost:3000/menu/${menuItems[index]._id}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setMenuItems(menuItems.filter((_, i) => i !== index));
+      }
+    } catch (error) {
+      console.error('Error removing item:', error);
     }
   };
   
 
-  // Handler to remove an item
-  const handleRemoveItem = (index) => {
-    const updatedMenu = menuItems.filter((_, i) => i !== index);
-    setMenuItems(updatedMenu);
-  };
-
-  // Handler to start editing an item
-  const handleEditItem = (index) => {
-    setIsEditing(index); // Set the index for editing
-    setEditItem(menuItems[index]); // Store the item being edited
-  };
-
-  // Handler to save the edited item
-  const handleSaveEdit = (index) => {
-    const updatedMenu = [...menuItems];
-    updatedMenu[index] = editItem;
-    setMenuItems(updatedMenu);
-    setIsEditing(null); // Exit edit mode
-    setEditItem(null); // Clear edit item state
-  };
+  // UI code remains the same, with inputs for adding/editing items and a table to display them
 
   const styles = {
     container: {
@@ -174,12 +181,12 @@ const Menu = () => {
         <input
           type="text"
           placeholder="Item Name"
-          value={newItem.name}
-          onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+          value={newItem.name}// a new menu item, the item typed by the user is set as newItem.name in this line:
+          onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}//When the user types into the input field, the onChange event is triggered.
           style={styles.input}
         />
         <input
-          type="number"
+          type="text"
           placeholder="Price"
           value={newItem.price}
           onChange={(e) => setNewItem({ ...newItem, price: e.target.value })}
@@ -220,7 +227,7 @@ const Menu = () => {
                     style={styles.input}
                   />
                 ) : (
-                  item.itemName
+                  item.name
                 )}
               </td>
               <td style={styles.td}>
@@ -232,7 +239,7 @@ const Menu = () => {
                     style={styles.input}
                   />
                 ) : (
-                  item.itemPrice
+                  item.price
                 )}
               </td>
               <td style={styles.td}>
@@ -246,7 +253,7 @@ const Menu = () => {
                     <option value="No">Not Available</option>
                   </select>
                 ) : (
-                  item.Availability ? 'Yes' : 'No'
+                  item.available ? 'Yes' : 'No'
                 )}
               </td>
               <td style={styles.td}>

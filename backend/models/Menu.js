@@ -1,20 +1,20 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
 
-const menuItemsSchema = new Schema({
-    itemName :{
-        type:String,
-        required:true,
-    },
-    itemPrice :{
-        type:Number,
-        required:true,
-    },
-    Availability:{
-        type:Boolean,
-        required:true,
-    },
-},{timestamps: true}
-);
+const menuSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  price: {
+    type: Number,
+    required: true
+  },
+  available: {
+    type: Boolean,
+    default: true
+  }
+});
 
-const MenuItem = model('MenuItem', menuItemsSchema);
-export default MenuItem;
+const Menu = mongoose.model('Menu', menuSchema);
+
+export default Menu;
