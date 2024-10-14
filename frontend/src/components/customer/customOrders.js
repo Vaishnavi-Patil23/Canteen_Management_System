@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Make sure you have axios installed: npm install axios
 
 const OrderPage = () => {
   const [orders, setOrders] = useState([]);
@@ -11,17 +12,18 @@ const OrderPage = () => {
   };
 
   useEffect(() => {
-    // Mocking backend API data for orders
-    const mockOrders = [
-      { _id: 1, name: 'Pizza', quantity: 2, price: 10, status: 'Completed' },
-      { _id: 2, name: 'Burger', quantity: 1, price: 5, status: 'Pending' },
-      { _id: 3, name: 'Pasta', quantity: 3, price: 8, status: 'In Progress' },
-    ];
+    // Fetching orders from the backend API
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/orders'); // Fetching from your API endpoint
+        setOrders(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      }
+    };
 
-    setTimeout(() => {
-      setOrders(mockOrders);
-      setLoading(false);
-    }, 1000);
+    fetchOrders();
   }, []);
 
   const handlePayment = () => {
@@ -38,9 +40,17 @@ const OrderPage = () => {
     return orders.reduce((acc, order) => acc + order.price * order.quantity, 0);
   };
 
-  const handleRemoveItem = (id) => {
-    const updatedOrders = orders.filter(order => order._id !== id);
-    setOrders(updatedOrders);
+  const handleRemoveItem = async (id) => {
+    try {
+      // Delete order from database
+      await axios.delete(`http://localhost:3000/orders/${id}`); // Adjust your API path if necessary
+
+      // Remove order from state after deletion from database
+      const updatedOrders = orders.filter(order => order._id !== id);
+      setOrders(updatedOrders);
+    } catch (error) {
+      console.error('Error deleting order:', error);
+    }
   };
 
   if (loading) return <div>Loading...</div>;
@@ -56,7 +66,7 @@ const OrderPage = () => {
             <p>Price: ${order.price}</p>
             <p style={getStatusStyle(order.status)}>Status: {order.status}</p>
             <button style={styles.removeButton} onClick={() => handleRemoveItem(order._id)}>
-              Remove Item
+              Remove {order.name}
             </button>
           </div>
         ))}

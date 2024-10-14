@@ -1,4 +1,3 @@
-//displaying done, add order is incomplete
 import React, { useState, useEffect } from 'react';
 
 const MenuPage = () => {
@@ -11,11 +10,14 @@ const MenuPage = () => {
     const fetchMenuItems = async () => {
       try {
         const response = await fetch('http://localhost:3000/menu');
+        if (!response.ok) {
+          throw new Error(`Error fetching menu items: ${response.status} ${response.statusText}`);
+        }
         const data = await response.json();
         setMenuItems(data);
-        setLoading(false);
       } catch (error) {
         console.error('Error fetching menu items:', error);
+      } finally {
         setLoading(false);
       }
     };
@@ -26,7 +28,7 @@ const MenuPage = () => {
   const addToOrder = (item, quantity) => {
     if (quantity > 0 && item.available) {
       const orderItem = { ...item, quantity };
-      setOrder([...order, orderItem]);
+      setOrder(prevOrder => [...prevOrder, orderItem]);
     } else {
       alert('Please select a valid quantity!');
     }
@@ -51,14 +53,12 @@ const MenuPage = () => {
       return;
     }
   
-    // Create an array to hold the order items
     const orderItems = order.map(item => ({
-      itemName: item.name,           // Make sure this field is included
-      price: item.price,             // Make sure this field is included
-      quantity: item.quantity,       // Make sure this field is included
-      totalAmount: item.price * item.quantity, // Calculate total amount
-      status: 'pending', 
-      customerName: customerName             // Set default status
+      itemName: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      totalAmount: item.price * item.quantity,
+      status: 'pending',
     }));
   
     try {
@@ -67,7 +67,10 @@ const MenuPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(orderItems),
+        body: JSON.stringify({
+          items: orderItems,
+          customerName,
+        }),
       });
   
       if (!response.ok) {
@@ -107,14 +110,14 @@ const MenuPage = () => {
                   id={`quantity_${item._id}`}
                   min="1"
                   max="10"
-                  value={quantities[item._id] || 1} // Controlled input
+                  value={quantities[item._id] || 1}
                   onChange={(e) => handleQuantityChange(item._id, e.target.value)}
                   style={styles.quantityInput}
                 />
                 <button
                   style={styles.addButton}
                   onClick={() => {
-                    const quantity = Number(quantities[item._id] || 1); // Use state quantity
+                    const quantity = Number(quantities[item._id] || 1);
                     addToOrder(item, quantity);
                   }}
                 >
@@ -146,6 +149,7 @@ const MenuPage = () => {
     </div>
   );
 };
+
 // CSS Styling remains the same
 const styles = {
   container: {
@@ -153,10 +157,10 @@ const styles = {
     textAlign: 'center',
   },
   menuList: {
-    display: 'flex', // Arrange items in a horizontal row
-    justifyContent: 'center', // Center horizontally
-    flexWrap: 'wrap', // Allow wrapping if items overflow
-    gap: '20px', // Space between items
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    gap: '20px',
   },
   menuItem: {
     border: '1px solid #ccc',
