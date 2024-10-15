@@ -61,7 +61,7 @@ const OrderPage = () => {
       <div style={styles.orderList}>
         {orders.map(order => (
           <div key={order._id} style={styles.orderItem}>
-            <h2>{order.name}</h2>
+            <h2>{order.itemName}</h2>
             <p>Quantity: {order.quantity}</p>
             <p>Price: ${order.price}</p>
             <p style={getStatusStyle(order.status)}>Status: {order.status}</p>

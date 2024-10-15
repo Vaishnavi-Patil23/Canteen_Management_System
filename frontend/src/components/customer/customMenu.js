@@ -110,7 +110,7 @@ const MenuPage = () => {
                   id={`quantity_${item._id}`}
                   min="1"
                   max="10"
-                  value={quantities[item._id] || 1}
+                  value={quantities[item._id] || ''}
                   onChange={(e) => handleQuantityChange(item._id, e.target.value)}
                   style={styles.quantityInput}
                 />

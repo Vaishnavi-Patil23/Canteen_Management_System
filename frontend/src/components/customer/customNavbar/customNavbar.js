@@ -11,6 +11,7 @@ function CustomNavbar({ position, profileName, profileImage, userType }) {
         <button>Menu</button>
         <button>Your Order</button>
         <button>Chat</button>
+
       </div>
       <div className="navbar-profile">
         <img src={profileImage} alt="Profile" className="profile-image" />
