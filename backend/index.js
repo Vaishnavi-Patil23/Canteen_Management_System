@@ -29,6 +29,8 @@ app.use('/orders',orderRoutes);
 //   res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
 // });
 
+let isShopOpen = true;
+
 const announcementSchema = new mongoose.Schema({
   text: { type: String, required: true },
 });
@@ -70,7 +72,23 @@ app.delete('/announcements/:id', async (req, res) => {
   }
 });
 
+app.get('/shop-status', (req, res) => {
+  res.json({ isOpen: isShopOpen });
+});
 
+// Toggle shop status (Owner only)
+app.post('/shop-status/toggle', (req, res) => {
+  const { isOpen } = req.body; // Expecting { "isOpen": true/false } in the request body
+
+  if (typeof isOpen === 'boolean') {
+    // Set the shop status based on the incoming value
+    isShopOpen = isOpen;
+    res.json({ isOpen: isShopOpen });
+  } else {
+    // Handle case where the request body doesn't contain a valid boolean
+    res.status(400).json({ error: 'Invalid input. Expected a boolean value for isOpen.' });
+  }
+});
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

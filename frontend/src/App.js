@@ -31,9 +31,27 @@ const Navigation = ({ setContentClass, role }) => {
     }
   }, [location.pathname, setContentClass]);
 
-  const toggleStatus = () => {
-    setStatus(prevStatus => (prevStatus === 'Open' ? 'Close' : 'Open'));
+  const toggleStatus = async () => {
+    try {
+      // Send request to backend to toggle shop status
+      const response = await fetch('http://localhost:3000/shop-status/toggle', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        setStatus(data.isOpen ? 'Open' : 'Close'); // Update status based on backend response
+      } else {
+        console.error('Failed to toggle shop status');
+      }
+    } catch (error) {
+      console.error('Error toggling shop status:', error);
+    }
   };
+  
 
   return (
     <nav className={`navbar ${navPosition}`}>
@@ -46,6 +64,9 @@ const Navigation = ({ setContentClass, role }) => {
           <Link to="/your-order">Orders</Link>
           <Link to="/chat">Chat</Link>
           <Link to="/user">User</Link>
+          <div className={`status-box ${status.toLowerCase()}`} onClick={toggleStatus}>
+        {status}
+      </div>
         </>
       ) : (
         <>
@@ -56,9 +77,7 @@ const Navigation = ({ setContentClass, role }) => {
           <Link to="/customer-user">User</Link>
         </>
       )}
-      <div className={`status-box ${status.toLowerCase()}`} onClick={toggleStatus}>
-        {status}
-      </div>
+      
     </nav>
   );
 };

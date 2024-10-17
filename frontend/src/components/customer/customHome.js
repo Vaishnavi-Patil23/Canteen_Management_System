@@ -1,29 +1,52 @@
 import React, { useState, useEffect } from 'react';
 
-function App() {
-  const [announcements, setAnnouncements] = useState('');
-  const [isShopOpen, setIsShopOpen] = useState(true);
+function CustomerHome() {
+  const [announcements, setAnnouncements] = useState([]);
+  const [isShopOpen, setIsShopOpen] = useState(true); // Tracks if the shop is open
+  // const role = localStorage.getItem('userRole');
 
-  // Fetch announcements and shop status from the backend
+  // Fetch announcements from the backend
   useEffect(() => {
-    const fetchShopData = async () => {
+    const fetchAnnouncements = async () => {
       try {
         const response = await fetch('http://localhost:3000/announcements');
-        if (!response.ok) {
-          throw new Error('Failed to fetch shop data');
-        }
         const data = await response.json();
-        setAnnouncements(data); // Update this line
-        // Assuming you have shopStatus from another API or defined elsewhere
-        setIsShopOpen(true); // Adjust this based on your app logic
+        setAnnouncements(data);
       } catch (error) {
-        console.error('Error fetching shop data:', error);
+        console.error('Error fetching announcements:', error);
       }
     };
-    
 
-    fetchShopData();
+    fetchAnnouncements();
   }, []);
+
+  // Fetch the current shop status from the backend
+  useEffect(() => {
+    const fetchShopStatus = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/shop-status');
+        const data = await response.json();
+        setIsShopOpen(data.isOpen); // Update the state based on backend response
+      } catch (error) {
+        console.error('Error fetching shop status:', error);
+      }
+    };
+
+    fetchShopStatus();
+  }, []);
+
+  // Function to toggle the shop status (owner only)
+  // const toggleShopStatus = async () => {
+  //   if (role === 'owner') {
+  //     try {
+  //       const response = await fetch('http://localhost:3000/shop-status/toggle', { method: 'POST' });
+  //       const data = await response.json();
+  //       setIsShopOpen(data.isOpen); // Update UI immediately after toggling
+  //     } catch (error) {
+  //       console.error('Error toggling shop status:', error);
+  //     }
+  //   }
+  // };
 
   return (
     <div style={styles.container}>
@@ -41,32 +64,33 @@ function App() {
       {/* Announcement & Shop Status Section (Vertical Layout) */}
       <section id="announcement-status" style={styles.announcementStatusSection}>
         {/* Announcement Section */}
-<div style={styles.announcementContainer}>
-  <h2 style={styles.announcementTitle}>Announcements</h2>
-  {announcements.length > 0 ? (
-    announcements.map((announcement, index) => (
-      <p key={index} style={styles.announcementMessage}>
-        {announcement.text}
-      </p>
-    ))
-  ) : (
-    <p style={styles.announcementMessage}>No announcements available.</p>
-  )}
-</div>
-
+        <div style={styles.announcementContainer}>
+          <h2 style={styles.announcementTitle}>Announcements</h2>
+          {announcements.length > 0 ? (
+            announcements.map((announcement, index) => (
+              <p key={index} style={styles.announcementMessage}>
+                {announcement.text}
+              </p>
+            ))
+          ) : (
+            <p style={styles.announcementMessage}>No announcements available.</p>
+          )}
+        </div>
 
         {/* Shop Status */}
         <div style={styles.statusContainer}>
           <h2 style={styles.statusTitle}>Shop Status</h2>
           <p style={styles.statusMessage}>
-            The shop is currently <span style={isShopOpen ? styles.open : styles.closed}>{isShopOpen ? 'Open' : 'Closed'}</span>.
-          </p>
+  The shop is currently <span style={isShopOpen ? styles.open : styles.closed}>{isShopOpen ? 'Open' : 'Closed'}</span>
+</p>
+
         </div>
       </section>
     </div>
   );
 }
 
+// CSS Styles
 const styles = {
   container: {
     fontFamily: "'Poppins', sans-serif",
@@ -75,7 +99,6 @@ const styles = {
     padding: 0,
     lineHeight: '1.6',
   },
-  // Home Section Styles
   homeSection: {
     display: 'flex',
     alignItems: 'center',
@@ -108,19 +131,15 @@ const styles = {
     marginTop: '30px',
     color: '#ff0',
   },
-
-  // Vertical Announcement and Shop Status Section
   announcementStatusSection: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center', // Center align the cards
+    alignItems: 'center',
     padding: '20px',
   },
-
-  // Announcement Section Styles
   announcementContainer: {
-    width: '80%', // Set width for the card
-    backgroundColor: '#90ee90', // Light green background for card
+    width: '80%',
+    backgroundColor: '#90ee90',
     borderRadius: '15px',
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
     padding: '30px',
@@ -131,17 +150,15 @@ const styles = {
   announcementTitle: {
     fontSize: '2.5rem',
     marginBottom: '20px',
-    color: '#2b472b', // Professional dark color
+    color: '#2b472b',
   },
   announcementMessage: {
     fontSize: '1.2rem',
-    color: '#34495e', // Slightly lighter for contrast
+    color: '#34495e',
   },
-
-  // Shop Status Section Styles
   statusContainer: {
-    width: '80%', // Set width for the card
-    backgroundColor: '#fdfa72', // Yellow background for card
+    width: '80%',
+    backgroundColor: '#fdfa72',
     borderRadius: '15px',
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
     padding: '30px',
@@ -151,11 +168,11 @@ const styles = {
   statusTitle: {
     fontSize: '2.5rem',
     marginBottom: '20px',
-    color: '#2c3e50', // Professional dark color
+    color: '#2c3e50',
   },
   statusMessage: {
     fontSize: '1.3rem',
-    color: '#34495e', // Slightly lighter for contrast
+    color: '#34495e',
   },
   open: {
     color: '#27ae60',
@@ -165,6 +182,16 @@ const styles = {
     color: '#e74c3c',
     fontWeight: 'bold',
   },
+  toggleButton: {
+    marginTop: '20px',
+    padding: '10px 20px',
+    fontSize: '1rem',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+  },
 };
 
-export default App;
+export default CustomerHome;
