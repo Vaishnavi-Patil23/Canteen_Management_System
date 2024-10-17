@@ -13,8 +13,10 @@ const UserProfile = () => {
 
   // Logout function
   const handleLogout = () => {
-    localStorage.removeItem('userRole'); // Clear role or any session data if necessary
-    navigate('/role-selection'); // Redirect to role selection page
+    localStorage.removeItem('userName'); // Clear user data from localStorage
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userPhoto');
+    navigate('/signin'); // Redirect to sign-in page
   };
 
   // Inline styles

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link, useLocation,Navigate } from 'react-router-dom';
 import OwnerHome from './components/owner/ownerHome';
 import OwnerMenu from './components/owner/ownerMenu';
 import OwnerOrders from './components/owner/ownerOrders';
@@ -12,7 +12,7 @@ import CustomerChat from './components/customer/customchat';
 import CustomerUser from './components/customer/customUser';
 import Signin from './components/signin';
 import Signup from './components/signup';
-import RoleSelection from './components/RoleSelection'; // Import the role selection component
+// import RoleSelection from './components/RoleSelection'; // Import the role selection component
 import './App.css'; // For custom styles
 
 
@@ -22,7 +22,7 @@ const Navigation = ({ setContentClass, role }) => {
   const [status, setStatus] = useState('Open');
 
   useEffect(() => {
-    if (location.pathname === '/') {
+    if (location.pathname === '/owner-home' ||location.pathname === '/customer-home') {
       setNavPosition('top');
       setContentClass(''); // No margin for home page
     } else {
@@ -38,9 +38,10 @@ const Navigation = ({ setContentClass, role }) => {
   return (
     <nav className={`navbar ${navPosition}`}>
       <div className="logo">Be Foodie</div>
-      <Link to="/">Home</Link>
+      {/* <Link to="/">Home</Link> */}
       {role === 'owner' ? (
         <>
+         <Link to="/owner-home">Owner Home</Link>
           <Link to="/menu">Manage Menu</Link>
           <Link to="/your-order">Orders</Link>
           <Link to="/chat">Chat</Link>
@@ -48,6 +49,7 @@ const Navigation = ({ setContentClass, role }) => {
         </>
       ) : (
         <>
+          <Link to="/customer-home">Home</Link>
           <Link to="/customer-menu">Menu</Link>
           <Link to="/customer-orders">Your Orders</Link>
           <Link to="/customer-chat">Chat</Link>
@@ -62,6 +64,7 @@ const Navigation = ({ setContentClass, role }) => {
 };
 
 const App = () => {
+  // const location = useLocation()
   const [contentClass, setContentClass] = useState('');
   const [role, setRole] = useState(null); // Track role (owner/customer)
 
@@ -72,46 +75,56 @@ const App = () => {
     }
   }, []);
 
-  const handleRoleSelect = (selectedRole) => {
-    setRole(selectedRole);
-    localStorage.setItem('userRole', selectedRole); // Save role to localStorage
-  };
+  // const handleRoleSelect = (selectedRole) => {
+  //   setRole(selectedRole);
+  //   localStorage.setItem('userRole', selectedRole); // Save role to localStorage
+  // };
 
 
   const handleLogout = () => {
     setRole(null);
     localStorage.removeItem('userRole'); // Remove role from localStorage
-    // navigate('/'); 
+    // indow.location.href = '/login';
   };
 
   // Show RoleSelection component if no role is set
-  if (!role) {
-    return <RoleSelection onRoleSelect={handleRoleSelect} />;
-  }
+  // if (!role) {
+  //   return <RoleSelection onRoleSelect={handleRoleSelect} />;
+  // }
+  // const shouldShowNavbar = !(location.pathname === '/signin' || location.pathname === '/signup');
   return (
     <Router>
-    <Navigation setContentClass={setContentClass} role={role} onLogout={handleLogout} />
-    <div className={`content ${contentClass}`}>
+ { role && (
+        <Navigation setContentClass={setContentClass} role={role} onLogout={handleLogout} />
+      )}    
+      <div className={`content ${contentClass}`}>
       <Routes>
+      {/* <Route path="/" element={<Navigate to="/signin" />} /> */}
         {role === 'owner' ? (
           <>
-                <Route path="/" element={<OwnerHome />} />
+                <Route path="/owner-home" element={<OwnerHome />} />
                 <Route path="/menu" element={<OwnerMenu />} />
                 <Route path="/your-order" element={<OwnerOrders />} />
                 <Route path="/chat" element={<OwnerChat />} />
                 <Route path="/user" element={<OwnerUser />} />
                 {/* <Route path="/user" element={<OwnerUser onLogout={handleLogout} />} /> */}
               </>
-            ) : (
+            ) :role === 'customer' ? (
               <>
-                <Route path="/" element={<CustomerHome />} />
+                <Route path="/customer-home" element={<CustomerHome />} />
                 <Route path="/customer-menu" element={<CustomerMenu />} />
                 <Route path="/customer-orders" element={<CustomerOrders />} />
                 <Route path="/customer-chat" element={<CustomerChat />} />
                 <Route path="/customer-user" element={<CustomerUser />} />
                 {/* <Route path="/customer-user" element={<CustomerUser onLogout={handleLogout} />} /> */}
               </>
+              ) : (
+                <>
+                  {/* Redirect to signin if no role is set */}
+                  <Route path="/" element={<Navigate to="/signin" replace />} />
+                </>
             )}
+            <Route path="*" element={<Navigate to="/login" replace />} />
             <Route path="/signin" element={<Signin/>} />
             <Route path="/signup" element={<Signup/>} />
           </Routes>

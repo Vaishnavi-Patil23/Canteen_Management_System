@@ -22,6 +22,9 @@ const Login = () => {
     // Handle login logic (e.g., sending data to backend)
     console.log('Login Data Submitted:', loginData);
 
+    // Save role to localStorage
+    localStorage.setItem('userRole', loginData.role);
+
     // Redirect based on user role
     if (loginData.role === 'customer') {
       navigate('/customer-home'); // Redirect to customer home page
@@ -119,7 +122,7 @@ const Login = () => {
         }
       `}</style>
 
-      <div className="login-container">
+<div className="login-container">
         <div className="login-box">
           <h2>Welcome to Be Foodie</h2>
           <form onSubmit={handleSubmit}>
