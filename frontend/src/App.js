@@ -12,7 +12,6 @@ import CustomerChat from './components/customer/customchat';
 import CustomerUser from './components/customer/customUser';
 import Signin from './components/signin';
 import Signup from './components/signup';
-// import RoleSelection from './components/RoleSelection'; // Import the role selection component
 import './App.css'; // For custom styles
 
 

@@ -5,6 +5,7 @@ import menuRoutes from './routes/menuRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import bodyParser from 'body-parser';
 import authRoutes from './routes/authRoutes.js';
+import chatRoutes from './routes/chatRoutes.js';
 import dotenv from 'dotenv'; // For environment variables
 dotenv.config(); // Load environment variables from .env file
 
@@ -24,6 +25,7 @@ mongoose
 app.use('/auth', authRoutes);
 app.use('/menu',menuRoutes);
 app.use('/orders',orderRoutes);
+app.use('/chat',chatRoutes);
 
 // app.get('*', (req, res) => {
 //   res.sendFile(path.resolve(__dirname, 'build', 'index.html'));

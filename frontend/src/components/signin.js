@@ -17,21 +17,47 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic (e.g., sending data to backend)
-    console.log('Login Data Submitted:', loginData);
+    
+    try {
+        const response = await fetch('http://localhost:3000/auth/signin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: loginData.email,
+                password: loginData.password,
+                role:loginData.role,
+            }),
+        });
 
-    // Save role to localStorage
-    localStorage.setItem('userRole', loginData.role);
+        const data = await response.json();
 
-    // Redirect based on user role
-    if (loginData.role === 'customer') {
-      navigate('/customer-home'); // Redirect to customer home page
-    } else if (loginData.role === 'owner') {
-      navigate('/owner-home'); // Redirect to owner home page
+        if (response.ok) {
+            const { name, role, photo } = data.user;
+
+            // Store user info in localStorage
+            localStorage.setItem('userName', name);
+            localStorage.setItem('userRole', role);
+            localStorage.setItem('userPhoto', photo || 'https://via.placeholder.com/150');
+
+            // Redirect based on user role
+            if (role === 'owner') {
+                navigate('/owner-home'); // Redirect to owner home page
+            } else {
+                navigate('/customer-home'); // Redirect to customer home page
+            }
+        } else {
+            alert(data.message || 'Login failed!');
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+        alert('An error occurred. Please try again later.');
     }
-  };
+};
+
 
   return (
     <>
@@ -122,7 +148,7 @@ const Login = () => {
         }
       `}</style>
 
-<div className="login-container">
+      <div className="login-container">
         <div className="login-box">
           <h2>Welcome to Be Foodie</h2>
           <form onSubmit={handleSubmit}>
@@ -160,7 +186,7 @@ const Login = () => {
 
           <div className="signup-link">
             <p>Don't have an account?</p>
-            <Link to="/signup">Sign up here</Link> {/* Link to signup page */}
+            <Link to="/signup">Sign up here</Link>
           </div>
         </div>
       </div>

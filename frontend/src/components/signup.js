@@ -30,7 +30,7 @@ const Signup = () => {
 
     // Send the signup data to the backend
     try {
-      const response = await fetch('http://localhost:5000/api/auth/signup', {
+      const response = await fetch('http://localhost:3000/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

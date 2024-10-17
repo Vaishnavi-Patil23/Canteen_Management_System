@@ -1,15 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const UserProfile = () => {
   const navigate = useNavigate();
-
-  // Example user data
+  
+  // Set initial user state to empty
   const [user, setUser] = useState({
-    name: "Vaidik Chaudhary",       // Replace with dynamic user name
-    role: "Owner",       // Replace with dynamic user role
-    photo: "https://via.placeholder.com/150" // Replace with user photo URL
+    name: '',
+    role: '',
+    photo: 'https://via.placeholder.com/150' // Default placeholder image
   });
+
+  // Fetch user info from localStorage on component mount
+  useEffect(() => {
+    const storedUserName = localStorage.getItem('userName'); // Assuming you store the user's name
+    const storedUserRole = localStorage.getItem('userRole'); // Assuming you store the user's role
+    const storedUserPhoto = localStorage.getItem('userPhoto'); // Optional: user's photo URL
+    
+    if (storedUserName && storedUserRole) {
+      setUser({
+        name: storedUserName,
+        role: storedUserRole,
+        photo: storedUserPhoto || 'https://via.placeholder.com/150'
+      });
+    }
+  }, []); // This effect runs once when the component mounts
 
   // Logout function
   const handleLogout = () => {
@@ -23,10 +38,10 @@ const UserProfile = () => {
   const styles = {
     container: {
       display: 'flex',
-      justifyContent: 'center', // Center horizontally
-      alignItems: 'center',     // Center vertically
-      height: '100vh',          // Full viewport height
-      backgroundColor: '#f0f0f0', // Light background color for contrast
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
+      backgroundColor: '#f0f0f0',
     },
     userProfile: {
       display: 'flex',
@@ -35,19 +50,19 @@ const UserProfile = () => {
       gap: '20px',
     },
     userPhoto: {
-      width: '150px', // Increased size
-      height: '150px', // Increased size
-      borderRadius: '50%', // Circular image
-      objectFit: 'cover',  // Cover the circle
+      width: '150px',
+      height: '150px',
+      borderRadius: '50%',
+      objectFit: 'cover',
     },
     userName: {
       margin: '0',
-      fontSize: '24px', // Larger font size
+      fontSize: '24px',
     },
     userRole: {
       margin: '5px 0 0 0',
       color: 'gray',
-      fontSize: '18px', // Larger font size
+      fontSize: '18px',
     },
     logoutButton: {
       marginTop: '20px',
@@ -65,8 +80,8 @@ const UserProfile = () => {
     <div style={styles.container}>
       <div style={styles.userProfile}>
         <img src={user.photo} alt="User" style={styles.userPhoto} />
-        <h2 style={styles.userName}>{user.name}</h2>
-        <p style={styles.userRole}>{user.role}</p>
+        <h2 style={styles.userName}>{user.name || 'Guest'}</h2>
+        <p style={styles.userRole}>{user.role || 'Unknown Role'}</p>
         <button style={styles.logoutButton} onClick={handleLogout}>
           Logout
         </button>

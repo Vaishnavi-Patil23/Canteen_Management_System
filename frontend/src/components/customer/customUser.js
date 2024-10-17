@@ -24,7 +24,7 @@ const UserProfile = () => {
         photo: storedUserPhoto || 'https://via.placeholder.com/150'
       });
     }
-  }, []); // Empty dependency array means this effect runs once when the component mounts
+  }, []); // This effect runs once when the component mounts
 
   // Logout function
   const handleLogout = () => {
@@ -91,4 +91,3 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
-
