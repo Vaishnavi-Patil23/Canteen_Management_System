@@ -88,4 +88,35 @@ router.post('/signin', async (req, res) => {
   }
 });
 
+router.post('/signup', async (req, res) => {
+  const { name, email, password, role } = req.body;
+
+  try {
+    // Check if the user already exists
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user object
+    user = new User({
+      name,
+      email,
+      password: hashedPassword,
+      role: role || 'customer', // Default to 'customer' if no role is provided
+    });
+
+    // Save the user to the database
+    await user.save();
+
+    // Send a success response
+    res.status(201).json({ message: 'User registered successfully' });
+  } catch (error) {
+    console.error('Error during signup:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 export default router;

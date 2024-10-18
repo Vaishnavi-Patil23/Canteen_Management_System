@@ -6,6 +6,11 @@ const MenuPage = () => {
   const [loading, setLoading] = useState(true);
   const [quantities, setQuantities] = useState({});
 
+  // Define user profile with a name
+  const userProfile = {
+    name: 'Joseph', // Replace with the actual username
+  };
+
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
@@ -46,13 +51,10 @@ const MenuPage = () => {
       alert('No items in the order');
       return;
     }
-  
-    const customerName = prompt('Please enter your name for the order');
-    if (!customerName) {
-      alert('Customer name is required');
-      return;
-    }
-  
+
+    // Use the predefined customer name
+    const customerName = userProfile.name;
+
     const orderItems = order.map(item => ({
       itemName: item.name,
       price: item.price,
@@ -60,7 +62,7 @@ const MenuPage = () => {
       totalAmount: item.price * item.quantity,
       status: 'pending',
     }));
-  
+
     try {
       const response = await fetch('http://localhost:3000/orders', {
         method: 'POST',
@@ -69,15 +71,15 @@ const MenuPage = () => {
         },
         body: JSON.stringify({
           items: orderItems,
-          customerName,
+          customerName, // Use the predefined customer name
         }),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to add the order');
       }
-  
+
       const data = await response.json();
       console.log('Order added successfully:', data);
       setOrder([]); // Reset the order after adding it
@@ -87,7 +89,7 @@ const MenuPage = () => {
       alert('Failed to add the order: ' + error.message);
     }
   };
-  
+
   if (loading) return <div>Loading...</div>;
 
   return (
