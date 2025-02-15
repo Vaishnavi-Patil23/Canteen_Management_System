@@ -78,7 +78,7 @@ router.post('/signin', async (req, res) => {
 
     // Return user info and token
     return res.status(200).json({
-      user: { name: user.name, role: user.role, photo: user.photo || 'https://via.placeholder.com/150' },
+      user: { name: user.name, role: user.role, photo: user.photo || 'https://via.placeholder.com/150',userId: user._id, },
       token,
     });
 

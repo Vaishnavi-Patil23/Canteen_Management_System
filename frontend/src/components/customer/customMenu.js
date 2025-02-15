@@ -8,7 +8,7 @@ const MenuPage = () => {
 
   // Define user profile with a name
   const userProfile = {
-    name: 'Joseph', // Replace with the actual username
+    name: localStorage.getItem('userName') || 'Guest', // Fetch dynamically
   };
 
   useEffect(() => {
@@ -52,8 +52,10 @@ const MenuPage = () => {
       return;
     }
 
-    // Use the predefined customer name
     const customerName = userProfile.name;
+    const userId = localStorage.getItem('userId');
+
+    console.log('userId from localStorage:', userId);
 
     const orderItems = order.map(item => ({
       itemName: item.name,
@@ -71,7 +73,8 @@ const MenuPage = () => {
         },
         body: JSON.stringify({
           items: orderItems,
-          customerName, // Use the predefined customer name
+          customerName, 
+          userId,
         }),
       });
 
@@ -99,7 +102,7 @@ const MenuPage = () => {
         {menuItems.map(item => (
           <div key={item._id} style={styles.menuItem}>
             <h2>{item.name}</h2>
-            <p>Price: ${item.price}</p>
+            <p>Price: Rs. {item.price}</p>
             <p style={item.available ? styles.available : styles.unavailable}>
               {item.available ? 'Available' : 'Unavailable'}
             </p>
@@ -139,7 +142,7 @@ const MenuPage = () => {
           <ul>
             {order.map((orderItem, index) => (
               <li key={index}>
-                {orderItem.name} - Quantity: {orderItem.quantity}, Price: ${orderItem.price * orderItem.quantity}
+                {orderItem.name} - Quantity: {orderItem.quantity}, Price: Rs. {orderItem.price * orderItem.quantity}
               </li>
             ))}
           </ul>

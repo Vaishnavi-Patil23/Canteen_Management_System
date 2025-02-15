@@ -16,7 +16,7 @@ const UserProfile = () => {
     const storedUserName = localStorage.getItem('userName'); // Assuming you store the user's name
     const storedUserRole = localStorage.getItem('userRole'); // Assuming you store the user's role
     const storedUserPhoto = localStorage.getItem('userPhoto'); // Optional: user's photo URL
-    
+    console.log("data is changed in user page");
     if (storedUserName && storedUserRole) {
       setUser({
         name: storedUserName,
@@ -34,7 +34,6 @@ const UserProfile = () => {
     navigate('/signin'); // Redirect to sign-in page
   };
 
-  // Inline styles
   const styles = {
     container: {
       display: 'flex',

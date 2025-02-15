@@ -15,8 +15,6 @@ app.use(express.json());
 
 app.use(bodyParser.json()); // Parse incoming JSON requests
 app.use(cors()); // Enable CORS for all origins
-
-
 mongoose
     .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/canteen_ms")
     .then(() => console.log("MongoDB connected"))
@@ -39,6 +37,16 @@ const announcementSchema = new mongoose.Schema({
 
 const Announcement = mongoose.model('Announcement', announcementSchema);
 
+const shopStatusSchema = new mongoose.Schema({
+  isOpen: { type: Boolean, required: true, default: true },
+});
+const ShopStatus = mongoose.model('ShopStatus', shopStatusSchema);
+(async () => {
+  const statusCount = await ShopStatus.countDocuments();
+  if (statusCount === 0) {
+    await ShopStatus.create({ isOpen: true }); // Default initial status
+  }
+})();
 app.get('/announcements', async (req, res) => {
   try {
     const announcements = await Announcement.find();
@@ -64,7 +72,6 @@ app.post('/announcements', async (req, res) => {
   }
 });
 
-
 app.delete('/announcements/:id', async (req, res) => {
   try {
     await Announcement.findByIdAndDelete(req.params.id);
@@ -74,23 +81,41 @@ app.delete('/announcements/:id', async (req, res) => {
   }
 });
 
-app.get('/shop-status', (req, res) => {
-  res.json({ isOpen: isShopOpen });
-});
+// app.get('/shop-status', (req, res) => {
+//   res.json({ isOpen: isShopOpen });
+// });
 
-// Toggle shop status (Owner only)
-app.post('/shop-status/toggle', (req, res) => {
-  const { isOpen } = req.body; // Expecting { "isOpen": true/false } in the request body
-
-  if (typeof isOpen === 'boolean') {
-    // Set the shop status based on the incoming value
-    isShopOpen = isOpen;
-    res.json({ isOpen: isShopOpen });
-  } else {
-    // Handle case where the request body doesn't contain a valid boolean
-    res.status(400).json({ error: 'Invalid input. Expected a boolean value for isOpen.' });
+app.get('/shop-status', async (req, res) => {
+  try {
+    const shopStatus = await ShopStatus.findOne();
+    res.json(shopStatus);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch shop status' });
   }
 });
+// Toggle shop status (Owner only)
+app.post('/shop-status/toggle', async (req, res) => {
+  try {
+    const shopStatus = await ShopStatus.findOne();
+    shopStatus.isOpen = !shopStatus.isOpen;
+    await shopStatus.save(); // Persist the updated status
+    res.json(shopStatus);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to toggle shop status' });
+  }
+});
+// app.post('/shop-status/toggle', (req, res) => {
+//   const { isOpen } = req.body; // Expecting { "isOpen": true/false } in the request body
+
+//   if (typeof isOpen === 'boolean') {
+//     // Set the shop status based on the incoming value
+//     isShopOpen = isOpen;
+//     res.json({ isOpen: isShopOpen });
+//   } else {
+//     // Handle case where the request body doesn't contain a valid boolean
+//     res.status(400).json({ error: 'Invalid input. Expected a boolean value for isOpen.' });
+//   }
+// });
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

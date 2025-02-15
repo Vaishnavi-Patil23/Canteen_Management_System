@@ -1,44 +1,53 @@
+// components/OwnerMessages.js
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import styled from 'styled-components';
 
-const OwnerChat = () => {
+const Container = styled.div`
+  margin: 20px;
+`;
+
+const MessageList = styled.ul`
+  list-style: none;
+  padding: 0;
+`;
+
+const MessageItem = styled.li`
+  background-color: #e3f2fd;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+`;
+
+const OwnerMessages = () => {
   const [messages, setMessages] = useState([]);
-  const [reply, setReply] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchMessages = async () => {
-      const response = await fetch('http://localhost:3000/messages');
-      const data = await response.json();
-      setMessages(data);
+      try {
+        const response = await axios.get('/chat/owner');
+        setMessages(response.data);
+      } catch (error) {
+        setError('Error fetching messages');
+      }
     };
-
     fetchMessages();
   }, []);
 
-  const sendReply = async (messageId) => {
-    await fetch(`http://localhost:3000/messages/reply/${messageId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ reply }),
-    });
-    setReply('');
-    // Optionally, refetch messages after sending a reply
-  };
-
   return (
-    <div>
-      <h2>Customer Messages</h2>
-      {messages.map((msg) => (
-        <div key={msg._id}>
-          <p><strong>Customer:</strong> {msg.message}</p>
-          {msg.ownerReply && <p><strong>Owner:</strong> {msg.ownerReply}</p>}
-          <textarea value={reply} onChange={(e) => setReply(e.target.value)} />
-          <button onClick={() => sendReply(msg._id)}>Reply</button>
-        </div>
-      ))}
-    </div>
+    <Container>
+      <h2>All Messages (Anonymous)</h2>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <MessageList>
+        {messages.map((message) => (
+          <MessageItem key={message._id}>
+            {message.content} - {new Date(message.timestamp).toLocaleString()}
+          </MessageItem>
+        ))}
+      </MessageList>
+    </Container>
   );
 };
 
-export default OwnerChat;
+export default OwnerMessages;

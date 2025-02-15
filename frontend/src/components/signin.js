@@ -36,12 +36,15 @@ const Login = () => {
         const data = await response.json();
 
         if (response.ok) {
-            const { name, role, photo } = data.user;
+            const { name, role, photo, userId } = data.user;
 
             // Store user info in localStorage
             localStorage.setItem('userName', name);
             localStorage.setItem('userRole', role);
             localStorage.setItem('userPhoto', photo || 'https://via.placeholder.com/150');
+            localStorage.setItem('userId', userId);
+
+            console.log('User ID stored in localStorage:', localStorage.getItem('userId'));
 
             // Redirect based on user role
             if (role === 'owner') {
@@ -57,7 +60,6 @@ const Login = () => {
         alert('An error occurred. Please try again later.');
     }
 };
-
 
   return (
     <>

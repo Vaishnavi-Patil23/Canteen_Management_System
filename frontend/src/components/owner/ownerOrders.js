@@ -24,32 +24,47 @@ const OwnerDashboard = () => {
     fetchOrders();
   }, []);
 
-  const handleStatusChange = async (index, newStatus) => {
+  const handleStatusChange = async (userId, itemId, newStatus) => {
     try {
-      const updatedOrders = [...orders];
-      updatedOrders[index].status = newStatus;
-      setOrders(updatedOrders);
+      // console.log("Updating Order:", orderId, "Item:", itemId, "New Status:", newStatus);
 
-      await axios.put(`http://localhost:3000/orders/${updatedOrders[index]._id}`, { status: newStatus });
-    } catch (error) {
-      console.error('Error updating order status:', error);
+      const response = await fetch(`http://localhost:3000/orders/items/${itemId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newStatus }),
+      });
+  
+      if (response.ok) {
+        setOrders((prevOrders) =>
+          prevOrders.map((order) => ({
+            ...order,
+            items: order.items.map((item) =>
+              item._id === itemId ? { ...item, status: newStatus } : item
+            ),
+          }))
+        );
+      } else {
+      console.error("Failed to update status.");
+    }
+  }catch (error) {
+      console.error('Error updating status:', error);
     }
   };
 
   const calculateTotal = (items) => {
     return items.reduce((total, item) => total + item.price * item.quantity, 0);
   };
-
   if (loading) return <div style={styles.loading}>Loading...</div>;
   if (orders.length === 0) {
     return <div style={styles.noOrders}>No orders available</div>;
   }
-
   return (
     <div style={styles.dashboardContainer}>
       <h2 style={styles.dashboardTitle}>Customer Orders</h2>
       <div style={styles.ordersList}>
-        {orders.map((order, index) => (
+        {orders.map((order) => (
           <div key={order._id} style={styles.orderCard}>
             <h3 style={styles.customerName}>Customer: {order.customerName}</h3>
             <table style={styles.orderTable}>
@@ -59,35 +74,36 @@ const OwnerDashboard = () => {
                   <th>Price</th>
                   <th>Quantity</th>
                   <th>Total</th>
+                  <th>Status</th> {/* Added Status Column */}
                 </tr>
               </thead>
               <tbody>
+                {order.items.map((item) => (
+                  <tr key={item._id}>
+                    <td>{item.itemName}</td>
+                    <td>Rs. {item.price}</td>
+                    <td>{item.quantity}</td>
+                    <td>Rs. {item.price * item.quantity}</td>
+                    <td>
+                      {/* Status Dropdown for Each Item */}
+                      <select
+                        value={item.status}
+                        onChange={(e) => handleStatusChange( order.userId, item._id, e.target.value)}
+                        style={styles.statusSelect}
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                      </select>
+                    </td>
+                  </tr>
+                ))}
                 <tr>
-                  <td>{order.itemName}</td>
-                  <td>Rs. {order.price}</td>
-                  <td>{order.quantity}</td>
-                  <td>Rs. {order.totalAmount}</td>
-                </tr>
-                <tr>
-                  <td colSpan="3">Total:</td>
-                  <td>Rs. {calculateTotal([order])}</td>
+                  <td colSpan="3" style={{ fontWeight: 'bold' }}>Total Amount:</td>
+                  <td style={{ fontWeight: 'bold' }}>Rs. {calculateTotal(order.items)}</td>
                 </tr>
               </tbody>
             </table>
-
-            <div style={styles.statusSection}>
-              <label htmlFor={`status-${index}`} style={styles.statusLabel}>Order Status:</label>
-              <select
-                id={`status-${index}`}
-                value={order.status}
-                onChange={(e) => handleStatusChange(index, e.target.value)}
-                style={styles.statusSelect}
-              >
-                <option value="pending">Pending</option>
-                <option value="in-progress">In Progress</option>
-                <option value="completed">Completed</option>
-              </select>
-            </div>
           </div>
         ))}
       </div>
@@ -95,20 +111,19 @@ const OwnerDashboard = () => {
   );
 };
 
-// CSS styles defined in a JavaScript object with descent colors
 const styles = {
   dashboardContainer: {
     padding: '20px',
     maxWidth: '800px',
     margin: '0 auto',
-    backgroundColor: '#F7F9FC', // Light grey background for the dashboard
+    backgroundColor: '#F7F9FC',
     borderRadius: '8px',
     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
   },
   dashboardTitle: {
     fontSize: '28px',
     marginBottom: '20px',
-    color: '#333', // Dark grey for the title
+    color: '#333',
   },
   ordersList: {
     display: 'flex',
@@ -116,17 +131,16 @@ const styles = {
     gap: '15px',
   },
   orderCard: {
-    backgroundColor: '#FFFFFF', // White for order cards
-    border: '1px solid #E0E0E0', // Light grey border for cards
+    backgroundColor: '#FFFFFF',
+    border: '1px solid #E0E0E0',
     borderRadius: '8px',
     padding: '15px',
-    transition: 'transform 0.2s, box-shadow 0.2s',
     boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
   },
   customerName: {
     fontSize: '20px',
     marginBottom: '10px',
-    color: '#555', // Medium grey for customer names
+    color: '#555',
   },
   orderTable: {
     width: '100%',
@@ -139,23 +153,23 @@ const styles = {
   statusLabel: {
     marginRight: '10px',
     fontWeight: 'bold',
-    color: '#333', // Dark grey for status label
+    color: '#333',
   },
   statusSelect: {
     padding: '5px',
-    border: '1px solid #C1C1C1', // Light grey for the select border
+    border: '1px solid #C1C1C1',
     borderRadius: '4px',
-    backgroundColor: '#F1F1F1', // Light background for select
+    backgroundColor: '#F1F1F1',
   },
   loading: {
     textAlign: 'center',
     fontSize: '18px',
-    color: '#555', // Medium grey for loading text
+    color: '#555',
   },
   noOrders: {
     textAlign: 'center',
     fontSize: '18px',
-    color: '#777', // Light grey for no orders text
+    color: '#777',
   },
 };
 

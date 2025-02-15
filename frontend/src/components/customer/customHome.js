@@ -23,17 +23,18 @@ function CustomerHome() {
   // Fetch the current shop status from the backend
   useEffect(() => {
     const fetchShopStatus = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/shop-status');
-        const data = await response.json();
-        setIsShopOpen(data.isOpen); // Update the state based on backend response
-      } catch (error) {
-        console.error('Error fetching shop status:', error);
-      }
+        try {
+            const response = await fetch('http://localhost:3000/shop-status');
+            const data = await response.json();
+            setIsShopOpen(data.isOpen);
+        } catch (error) {
+            console.error('Error fetching shop status:', error);
+        }
     };
 
     fetchShopStatus();
-  }, []);
+}, []);
+
 
   // Function to toggle the shop status (owner only)
   // const toggleShopStatus = async () => {

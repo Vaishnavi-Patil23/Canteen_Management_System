@@ -12,7 +12,7 @@ import CustomerChat from './components/customer/customchat';
 import CustomerUser from './components/customer/customUser';
 import Signin from './components/signin';
 import Signup from './components/signup';
-import './App.css'; // For custom styles
+import './App.css'; 
 
 
 const Navigation = ({ setContentClass, role }) => {
@@ -21,7 +21,7 @@ const Navigation = ({ setContentClass, role }) => {
   const [status, setStatus] = useState('Open');
 
   useEffect(() => {
-    if (location.pathname === '/owner-home' ||location.pathname === '/customer-home') {
+    if (location.pathname === '/owner-home' || location.pathname === '/customer-home') {
       setNavPosition('top');
       setContentClass(''); // No margin for home page
     } else {
@@ -30,6 +30,24 @@ const Navigation = ({ setContentClass, role }) => {
     }
   }, [location.pathname, setContentClass]);
 
+
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/shop-status');
+        if (response.ok) {
+          const data = await response.json();
+          setStatus(data.isOpen ? 'Open' : 'Close');
+        } else {
+          console.error('Failed to fetch shop status');
+        }
+      } catch (error) {
+        console.error('Error fetching shop status:', error);
+      }
+    };
+
+    fetchStatus();
+  }, []);
   const toggleStatus = async () => {
     try {
       // Send request to backend to toggle shop status
@@ -50,7 +68,6 @@ const Navigation = ({ setContentClass, role }) => {
       console.error('Error toggling shop status:', error);
     }
   };
-  
 
   return (
     <nav className={`navbar ${navPosition}`}>
@@ -64,7 +81,7 @@ const Navigation = ({ setContentClass, role }) => {
           <Link to="/chat">Chat</Link>
           <Link to="/user">User</Link>
           <div className={`status-box ${status.toLowerCase()}`} onClick={toggleStatus}>
-        {status}
+          {status}
       </div>
         </>
       ) : (
@@ -93,23 +110,14 @@ const App = () => {
     }
   }, []);
 
-  // const handleRoleSelect = (selectedRole) => {
-  //   setRole(selectedRole);
-  //   localStorage.setItem('userRole', selectedRole); // Save role to localStorage
-  // };
-
-
   const handleLogout = () => {
     setRole(null);
     localStorage.removeItem('userRole'); // Remove role from localStorage
     // indow.location.href = '/login';
   };
 
-  // Show RoleSelection component if no role is set
-  // if (!role) {
-  //   return <RoleSelection onRoleSelect={handleRoleSelect} />;
-  // }
-  // const shouldShowNavbar = !(location.pathname === '/signin' || location.pathname === '/signup');
+  const hideNavbarPaths = ['/signin', '/signup'];
+
   return (
     <Router>
  { role && (
