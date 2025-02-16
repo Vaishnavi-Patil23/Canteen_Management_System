@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 
 function CustomerHome() {
   const [announcements, setAnnouncements] = useState([]);
-  const [isShopOpen, setIsShopOpen] = useState(true); // Tracks if the shop is open
+  const [isShopOpen, setIsShopOpen] = useState(true); 
   // const role = localStorage.getItem('userRole');
 
-  // Fetch announcements from the backend
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
@@ -20,7 +19,6 @@ function CustomerHome() {
     fetchAnnouncements();
   }, []);
 
-  // Fetch the current shop status from the backend
   useEffect(() => {
     const fetchShopStatus = async () => {
         try {
@@ -62,9 +60,7 @@ function CustomerHome() {
         </div>
       </section>
 
-      {/* Announcement & Shop Status Section (Vertical Layout) */}
       <section id="announcement-status" style={styles.announcementStatusSection}>
-        {/* Announcement Section */}
         <div style={styles.announcementContainer}>
           <h2 style={styles.announcementTitle}>Announcements</h2>
           {announcements.length > 0 ? (
@@ -78,7 +74,6 @@ function CustomerHome() {
           )}
         </div>
 
-        {/* Shop Status */}
         <div style={styles.statusContainer}>
           <h2 style={styles.statusTitle}>Shop Status</h2>
           <p style={styles.statusMessage}>
@@ -91,7 +86,7 @@ function CustomerHome() {
   );
 }
 
-// CSS Styles
+
 const styles = {
   container: {
     fontFamily: "'Poppins', sans-serif",

@@ -4,42 +4,34 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
 const router = express.Router();
-
-// Default owner credentials (for demo purposes; hash this in a real scenario)
 const ownerCredentials = {
   name: 'vaidik',
   email: 'owner@canteen.com',
-  password: 'owner123', // This should ideally be hashed in production
+  password: 'owner123',
   role: 'owner',
 };
 
-// Signin route
 router.post('/signin', async (req, res) => {
-  const { email, password, role } = req.body; // Ensure role is passed
+  const { email, password, role } = req.body; 
 
   console.log(`Received email: ${email}, role: ${role}`);
 
   try {
-    // If the email is for the owner
     if (email === ownerCredentials.email) {
-      // Compare password for the owner
-      const isPasswordValid = password === ownerCredentials.password; // Simple check; use bcrypt in production
+      const isPasswordValid = password === ownerCredentials.password; 
       console.log(`Owner password valid: ${isPasswordValid}`);
 
       if (!isPasswordValid) {
         return res.status(401).json({ message: 'Invalid credentials for owner' });
       }
 
-      // Ensure role is 'owner' for owner login
       if (role !== ownerCredentials.role) {
         return res.status(404).json({ message: 'User not found' });
       }
-
-      // If password and role are valid, return owner credentials and token
       const token = jwt.sign(
         { email: ownerCredentials.email, role: ownerCredentials.role },
         process.env.JWT_SECRET,
-        { expiresIn: '1h' }
+        { expiresIn: '24h' }
       );
 
       return res.status(200).json({
@@ -47,16 +39,12 @@ router.post('/signin', async (req, res) => {
         token,
       });
     }
-
-    // For regular user login
     const user = await User.findOne({ email });
     console.log(`Found user: ${user}`);
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-
-    // Compare password for regular user
     const isPasswordValid = await bcrypt.compare(password, user.password);
     console.log(`User password valid: ${isPasswordValid}`);
 
@@ -64,19 +52,16 @@ router.post('/signin', async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Ensure role matches the user's role
     if (role !== user.role) {
       return res.status(403).json({ message: 'Role mismatch. Please select the correct role.' });
     }
 
-    // Generate JWT token after successful login
     const token = jwt.sign(
       { email: user.email, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: '24h' }
     );
 
-    // Return user info and token
     return res.status(200).json({
       user: { name: user.name, role: user.role, photo: user.photo || 'https://via.placeholder.com/150',userId: user._id, },
       token,
@@ -92,27 +77,19 @@ router.post('/signup', async (req, res) => {
   const { name, email, password, role } = req.body;
 
   try {
-    // Check if the user already exists
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ message: 'User already exists' });
     }
-
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create a new user object
     user = new User({
       name,
       email,
       password: hashedPassword,
-      role: role || 'customer', // Default to 'customer' if no role is provided
+      role: role || 'customer',
     });
-
-    // Save the user to the database
     await user.save();
 
-    // Send a success response
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
     console.error('Error during signup:', error);

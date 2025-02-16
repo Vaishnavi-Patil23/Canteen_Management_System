@@ -7,7 +7,6 @@ const Menu = () => {
   const [editItem, setEditItem] = useState(null);
   const [isEditing, setIsEditing] = useState(null);
 
-  // Fetch menu items from the backend
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
@@ -22,7 +21,6 @@ const Menu = () => {
     fetchMenuItems();
   }, []);
 
-  // Handler to add a new item
   const handleAddItem = async () => {
     if (newItem.name && newItem.price) {
       try {
@@ -42,7 +40,6 @@ const Menu = () => {
     }
   };
 
-  // Handler to save the edited item
   const handleSaveEdit = async (index) => {
     try {
       const response = await fetch(`http://localhost:3000/menu/${menuItems[index]._id}`, {
@@ -63,15 +60,12 @@ const Menu = () => {
     }
   };
   
-  // Check that handleEditItem is defined properly
 const handleEditItem = (index) => {
-  setIsEditing(index); // Set the index for editing
-  setEditItem(menuItems[index]); // Store the item being edited
+  setIsEditing(index); 
+  setEditItem(menuItems[index]); 
 };
 
-// Use it inside your component, ensuring it’s defined before usage
 
-  // Handler to remove an item
   const handleRemoveItem = async (index) => {
     try {
       const response = await fetch(`http://localhost:3000/menu/${menuItems[index]._id}`, {
@@ -84,9 +78,7 @@ const handleEditItem = (index) => {
       console.error('Error removing item:', error);
     }
   };
-  
 
-  // UI code remains the same, with inputs for adding/editing items and a table to display them
 
   const styles = {
     container: {
@@ -176,13 +168,12 @@ const handleEditItem = (index) => {
     <div style={styles.container}>
       <h1 style={styles.header}>Menu</h1>
 
-      {/* Form to Add New Menu Item */}
       <div style={styles.addItem}>
         <input
           type="text"
           placeholder="Item Name"
-          value={newItem.name}// a new menu item, the item typed by the user is set as newItem.name in this line:
-          onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}//When the user types into the input field, the onChange event is triggered.
+          value={newItem.name}
+          onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
           style={styles.input}
         />
         <input
@@ -205,7 +196,6 @@ const handleEditItem = (index) => {
         </button>
       </div>
 
-      {/* Menu Items Table */}
       <table style={styles.table}>
         <thead>
           <tr>

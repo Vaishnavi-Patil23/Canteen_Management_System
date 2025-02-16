@@ -6,15 +6,16 @@ import orderRoutes from './routes/orderRoutes.js';
 import bodyParser from 'body-parser';
 import authRoutes from './routes/authRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
-import dotenv from 'dotenv'; // For environment variables
-dotenv.config(); // Load environment variables from .env file
+import protectedRoutes from "./routes/protectedRoutes.js";
+import dotenv from 'dotenv'; 
+dotenv.config(); 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
-app.use(bodyParser.json()); // Parse incoming JSON requests
-app.use(cors()); // Enable CORS for all origins
+app.use(bodyParser.json());
+app.use(cors());
 mongoose
     .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/canteen_ms")
     .then(() => console.log("MongoDB connected"))
@@ -24,10 +25,7 @@ app.use('/auth', authRoutes);
 app.use('/menu',menuRoutes);
 app.use('/orders',orderRoutes);
 app.use('/chat',chatRoutes);
-
-// app.get('*', (req, res) => {
-//   res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
-// });
+app.use('/protected', protectedRoutes);
 
 let isShopOpen = true;
 
@@ -44,7 +42,7 @@ const ShopStatus = mongoose.model('ShopStatus', shopStatusSchema);
 (async () => {
   const statusCount = await ShopStatus.countDocuments();
   if (statusCount === 0) {
-    await ShopStatus.create({ isOpen: true }); // Default initial status
+    await ShopStatus.create({ isOpen: true }); 
   }
 })();
 app.get('/announcements', async (req, res) => {
@@ -57,7 +55,7 @@ app.get('/announcements', async (req, res) => {
 });
 
 app.post('/announcements', async (req, res) => {
-  console.log("Received request body:", req.body); // Debugging line
+  console.log("Received request body:", req.body);
   
   const newAnnouncement = new Announcement({
     text: req.body.text,
@@ -67,7 +65,7 @@ app.post('/announcements', async (req, res) => {
     const savedAnnouncement = await newAnnouncement.save();
     res.status(201).json(savedAnnouncement);
   } catch (error) {
-    console.error("Error creating announcement:", error); // Log the error
+    console.error("Error creating announcement:", error); 
     res.status(400).json({ message: 'Error creating announcement', error });
   }
 });
@@ -93,29 +91,18 @@ app.get('/shop-status', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch shop status' });
   }
 });
-// Toggle shop status (Owner only)
+
 app.post('/shop-status/toggle', async (req, res) => {
   try {
     const shopStatus = await ShopStatus.findOne();
     shopStatus.isOpen = !shopStatus.isOpen;
-    await shopStatus.save(); // Persist the updated status
+    await shopStatus.save(); 
     res.json(shopStatus);
   } catch (error) {
     res.status(500).json({ error: 'Failed to toggle shop status' });
   }
 });
-// app.post('/shop-status/toggle', (req, res) => {
-//   const { isOpen } = req.body; // Expecting { "isOpen": true/false } in the request body
 
-//   if (typeof isOpen === 'boolean') {
-//     // Set the shop status based on the incoming value
-//     isShopOpen = isOpen;
-//     res.json({ isOpen: isShopOpen });
-//   } else {
-//     // Handle case where the request body doesn't contain a valid boolean
-//     res.status(400).json({ error: 'Invalid input. Expected a boolean value for isOpen.' });
-//   }
-// });
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

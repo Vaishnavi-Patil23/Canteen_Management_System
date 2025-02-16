@@ -3,7 +3,7 @@ import express from 'express';
 import Menu from '../models/Menu.js';
 const router = express.Router();
 
-// Route to get all menu items
+
 router.get('/', async (req, res) => {
   try {
     const menuItems = await Menu.find();
@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Route to add a menu item
+
 router.post('/', async (req, res) => {
   const { name, price, available } = req.body;
   try {

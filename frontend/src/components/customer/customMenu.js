@@ -6,9 +6,8 @@ const MenuPage = () => {
   const [loading, setLoading] = useState(true);
   const [quantities, setQuantities] = useState({});
 
-  // Define user profile with a name
   const userProfile = {
-    name: localStorage.getItem('userName') || 'Guest', // Fetch dynamically
+    name: localStorage.getItem('userName') || 'Guest', 
   };
 
   useEffect(() => {
@@ -85,7 +84,7 @@ const MenuPage = () => {
 
       const data = await response.json();
       console.log('Order added successfully:', data);
-      setOrder([]); // Reset the order after adding it
+      setOrder([]); 
       alert('Order added successfully!');
     } catch (error) {
       console.error('Error adding order:', error);
@@ -155,7 +154,6 @@ const MenuPage = () => {
   );
 };
 
-// CSS Styling remains the same
 const styles = {
   container: {
     padding: '20px',

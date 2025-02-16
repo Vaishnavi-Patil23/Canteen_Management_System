@@ -4,7 +4,6 @@ function App() {
   const [announcement, setAnnouncement] = useState('');
   const [announcementsList, setAnnouncementsList] = useState([]);
 
-  // Fetch announcements from the backend on component mount
   useEffect(() => {
     fetchAnnouncements();
   }, []);
@@ -29,8 +28,8 @@ function App() {
         body: JSON.stringify({ text: announcement }),
       });
       if (response.ok) {
-        setAnnouncement(''); // Reset the field after posting
-        fetchAnnouncements(); // Refresh the announcement list
+        setAnnouncement('');
+        fetchAnnouncements(); 
       } else {
         alert('Failed to post announcement');
       }
@@ -44,7 +43,7 @@ function App() {
       await fetch(`http://localhost:3000/announcements/${id}`, {
         method: 'DELETE',
       });
-      fetchAnnouncements(); // Refresh the announcement list
+      fetchAnnouncements(); 
     } catch (error) {
       console.error('Error deleting announcement:', error);
     }
@@ -52,7 +51,6 @@ function App() {
 
   return (
     <div style={styles.container}>
-      {/* Home Section */}
       <section id="home" style={styles.homeSection}>
         <div style={styles.homeContent}>
           <h1 style={styles.shopName}>Be Foodie</h1>
@@ -63,9 +61,8 @@ function App() {
         </div>
       </section>
 
-      {/* Announcement & Address Section */}
       <section id="announcement-address" style={styles.announcementAddressSection}>
-        {/* Announcement Form */}
+ 
         <div style={styles.announcementContainer}>
           <h2 style={styles.announcementTitle}>Got Something to Share?</h2>
           <textarea
@@ -79,7 +76,6 @@ function App() {
           </button>
         </div>
 
-        {/* Display Announcements */}
         <div style={styles.displayContainer}>
           <h2 style={styles.displayTitle}>Announcements</h2>
           {announcementsList.length === 0 ? (
@@ -98,7 +94,6 @@ function App() {
           )}
         </div>
 
-        {/* Address Section */}
         <div style={styles.addressContainer}>
           <h2 style={styles.addressTitle}>Visit Us</h2>
           <p style={styles.address}>
@@ -119,7 +114,7 @@ const styles = {
     padding: 0,
     lineHeight: '1.6',
   },
-  // Home Section Styles
+
   homeSection: {
     display: 'flex',
     alignItems: 'center',
@@ -153,13 +148,12 @@ const styles = {
     color: '#ff0',
   },
 
-  // Announcement and Address Section (Vertical Layout)
   announcementAddressSection: {
     padding: '80px 50px',
     backgroundColor: '#74b9ff',
     color: '#fff',
   },
-  // Announcement Section Styles
+
   announcementContainer: {
     backgroundColor: '#fff',
     borderRadius: '15px',
@@ -193,7 +187,7 @@ const styles = {
     transition: 'background-color 0.3s',
   },
 
-  // Display Announcements Styles
+
   displayContainer: {
     
     marginTop: '30px',
@@ -228,7 +222,7 @@ const styles = {
     padding: '10px',
     border: '1px solid #ddd',
     borderRadius: '5px',
-    flex: '1 1 45%', // Flex property to manage spacing
+    flex: '1 1 45%', 
     marginRight: '10px',
   },
   deleteButton: {
@@ -241,7 +235,6 @@ const styles = {
     transition: 'background-color 0.3s',
   },
 
-  // Address Section Styles
   addressContainer: {
     backgroundColor: '#fff',
     borderRadius: '15px',

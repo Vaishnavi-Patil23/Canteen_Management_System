@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Make sure you have axios installed: npm install axios
+import axios from 'axios'; 
 
 const OrderPage = () => {
   const [orders, setOrders] = useState([]);
@@ -9,82 +9,8 @@ const OrderPage = () => {
 
     
     const userProfile = {
-      name: localStorage.getItem('userName') || 'Guest', // Fetch dynamically
+      name: localStorage.getItem('userName') || 'Guest', 
     };
-
-
-  // useEffect(() => {
-  //   // Fetching orders from the backend API
-  //   const fetchOrders = async () => {
-  //     try {
-  //       const response = await axios.get(`http://localhost:3000/orders`, {
-  //         params: { userId},
-  //       }); // Fetching from your API endpoint
-  //       setOrders(response.data);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       console.error('Error fetching orders:', error);
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchOrders();
-  // }, [userId]);
-
-  // useEffect(() => {
-  //   const userId = localStorage.getItem('userId');
-  //   console.log('Fetched userId:', userId);
-  //   // Fetching orders for the logged-in user using localStorage
-  //   if (userId) {
-    // const fetchOrders = async () => {
-    //   try {
-    //     const userId = localStorage.getItem('userId'); // Retrieve the userId from localStorage
-        
-    //     if (!userId) {
-    //       console.error('User not logged in');
-    //       setLoading(false);
-    //       return;
-    //     }
-    //     // Fetch orders for the logged-in user
-    //     const response = await axios.get(`http://localhost:3000/orders/${userId}`);
-    //     setOrders(response.data);
-    //     setLoading(false);
-    //   } catch (error) {
-    //     console.error('Error fetching orders:', error);
-    //     setLoading(false);
-    //   }
-    // };
-
-  //   const fetchOrders = async () => {
-  //     const userId = localStorage.getItem('userId');  // Retrieve the userId from localStorage
-    
-  //     if (!userId) {
-  //       alert('User not logged in');
-  //       return;
-  //     }
-    
-  //     try {
-  //       const response = await fetch(`http://localhost:3000/orders/${userId}`);
-  //       if (!response.ok) {
-  //         const errorData = await response.json();
-  //         throw new Error(errorData.message || 'Failed to fetch orders');
-  //       }
-    
-  //       const orders = await response.json();
-  //       console.log('Orders fetched successfully:', orders);
-  //       setOrders(orders);  // Assuming you are storing the fetched orders in a state variable
-  //     } catch (error) {
-  //       console.error('Error fetching orders:', error);
-  //       alert('Failed to fetch orders: ' + error.message);
-  //     }
-  //   };
-    
-  //   fetchOrders();
-  // } else {
-  //   console.error('User ID not found in localStorage');
-  //   setLoading(false); // Set loading to false if userId is not found
-  // }
-  // }, []); // Empty dependency array to run once on mount
 
   const userId = localStorage.getItem('userId')?.trim();
   useEffect(() => {
@@ -102,7 +28,7 @@ const OrderPage = () => {
       } catch (error) {
         console.error('Error fetching orders:', error);
       } finally {
-        setLoading(false); // Reset loading after fetch
+        setLoading(false); 
       }
     };
 
@@ -129,10 +55,9 @@ const OrderPage = () => {
 
   const handleRemoveItem = async (id) => {
     try {
-      // Delete order from database
-      await axios.delete(`http://localhost:3000/orders/${id}`); // Adjust your API path if necessary
 
-      // Remove order from state after deletion from database
+      await axios.delete(`http://localhost:3000/orders/${id}`);
+
       const updatedOrders = orders.filter(order => order._id !== id);
       setOrders(updatedOrders);
     } catch (error) {
@@ -149,7 +74,6 @@ const OrderPage = () => {
       {orders.map((order) => (
         <div key={order._id} style={styles.orderItem}>
           
-          {/* Display items in the order */}
           {order.items.map((item) => (
             <div key={item._id} style={styles.itemDetails}>
               <h2>{item.itemName}</h2>
@@ -162,7 +86,6 @@ const OrderPage = () => {
             </div>
           ))}
 
-          {/* Display order status */}
          
           <button
             style={styles.removeButton}
@@ -182,7 +105,6 @@ const OrderPage = () => {
         )}
       </div>
 
-      {/* Payment Form */}
       {showPaymentForm && (
         <form onSubmit={handleSubmitPayment} style={styles.paymentForm}>
           <h3>Payment Details</h3>
@@ -198,13 +120,11 @@ const OrderPage = () => {
         </form>
       )}
 
-      {/* Payment Success Message */}
       {paymentSuccess && <p style={styles.successMessage}>Payment Successful!</p>}
     </div>
   );
 };
 
-// Function to get status style based on order status
 const getStatusStyle = (status) => {
   switch (status) {
     case 'Completed':
@@ -218,7 +138,6 @@ const getStatusStyle = (status) => {
   }
 };
 
-// CSS Styling
 const styles = {
   container: {
     padding: '30px',

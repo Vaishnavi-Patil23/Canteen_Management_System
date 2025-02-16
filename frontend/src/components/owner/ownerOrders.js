@@ -74,7 +74,7 @@ const OwnerDashboard = () => {
                   <th>Price</th>
                   <th>Quantity</th>
                   <th>Total</th>
-                  <th>Status</th> {/* Added Status Column */}
+                  <th>Status</th> 
                 </tr>
               </thead>
               <tbody>
@@ -85,7 +85,7 @@ const OwnerDashboard = () => {
                     <td>{item.quantity}</td>
                     <td>Rs. {item.price * item.quantity}</td>
                     <td>
-                      {/* Status Dropdown for Each Item */}
+                      
                       <select
                         value={item.status}
                         onChange={(e) => handleStatusChange( order.userId, item._id, e.target.value)}

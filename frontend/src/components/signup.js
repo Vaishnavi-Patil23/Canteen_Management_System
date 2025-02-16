@@ -7,7 +7,7 @@ const Signup = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'customer', // Default role set to 'customer'
+    role: 'customer', 
   });
 
   const navigate = useNavigate();
@@ -22,13 +22,11 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Password confirmation validation
     if (signupData.password !== signupData.confirmPassword) {
       alert('Passwords do not match!');
       return;
     }
 
-    // Send the signup data to the backend
     try {
       const response = await fetch('http://localhost:3000/auth/signup', {
         method: 'POST',
@@ -42,8 +40,7 @@ const Signup = () => {
 
       if (response.ok) {
         alert('Signup successful! Please login.');
-
-        // Redirect to Signin after successful signup
+      
         navigate('/signin');
       } else {
         alert(data.message || 'Error signing up.');

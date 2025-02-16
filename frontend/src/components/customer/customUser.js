@@ -3,19 +3,17 @@ import { useNavigate } from 'react-router-dom';
 
 const UserProfile = () => {
   const navigate = useNavigate();
-  
-  // Set initial user state to empty
+
   const [user, setUser] = useState({
     name: '',
     role: '',
-    photo: 'https://via.placeholder.com/150' // Default placeholder image
+    photo: 'https://via.placeholder.com/150' 
   });
 
-  // Fetch user info from localStorage on component mount
   useEffect(() => {
-    const storedUserName = localStorage.getItem('userName'); // Assuming you store the user's name
-    const storedUserRole = localStorage.getItem('userRole'); // Assuming you store the user's role
-    const storedUserPhoto = localStorage.getItem('userPhoto'); // Optional: user's photo URL
+    const storedUserName = localStorage.getItem('userName'); 
+    const storedUserRole = localStorage.getItem('userRole'); 
+    const storedUserPhoto = localStorage.getItem('userPhoto');
     console.log("data is changed in user page");
     if (storedUserName && storedUserRole) {
       setUser({
@@ -24,14 +22,14 @@ const UserProfile = () => {
         photo: storedUserPhoto || 'https://via.placeholder.com/150'
       });
     }
-  }, []); // This effect runs once when the component mounts
+  }, []); 
 
-  // Logout function
+
   const handleLogout = () => {
-    localStorage.removeItem('userName'); // Clear user data from localStorage
+    localStorage.removeItem('userName'); 
     localStorage.removeItem('userRole');
     localStorage.removeItem('userPhoto');
-    navigate('/signin'); // Redirect to sign-in page
+    navigate('/signin'); 
   };
 
   const styles = {

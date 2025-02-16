@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
       createdAt: new Date(),
     });
     const savedOrder = await newOrder.save();
-    console.log('Order added successfully:', savedOrder); // Log successful addition
+    console.log('Order added successfully:', savedOrder); 
     res.status(201).json({ message: 'Order added successfully', order: savedOrder });
   } catch (error) {
     console.error('Error adding order:', error);

@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import {jwtDecode} from "jwt-decode";
 
 const Login = () => {
   const [loginData, setLoginData] = useState({
     email: '',
     password: '',
-    role: 'customer', // Default role set to 'customer'
+    role: 'customer', 
   });
 
-  const navigate = useNavigate(); // Initialize useNavigate for redirection
+  const navigate = useNavigate(); 
 
   const handleChange = (e) => {
     setLoginData({
@@ -39,18 +40,19 @@ const Login = () => {
             const { name, role, photo, userId } = data.user;
 
             // Store user info in localStorage
+            localStorage.setItem("token", data.token);
             localStorage.setItem('userName', name);
             localStorage.setItem('userRole', role);
             localStorage.setItem('userPhoto', photo || 'https://via.placeholder.com/150');
             localStorage.setItem('userId', userId);
 
             console.log('User ID stored in localStorage:', localStorage.getItem('userId'));
-
-            // Redirect based on user role
-            if (role === 'owner') {
-                navigate('/owner-home'); // Redirect to owner home page
+            // window.location.reload();
+            const decoded = jwtDecode(data.token);
+            if (decoded.role === 'owner') {
+                navigate('/owner-home'); 
             } else {
-                navigate('/customer-home'); // Redirect to customer home page
+                navigate('/customer-home'); 
             }
         } else {
             alert(data.message || 'Login failed!');
