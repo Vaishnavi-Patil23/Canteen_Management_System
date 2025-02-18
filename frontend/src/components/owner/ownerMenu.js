@@ -10,7 +10,7 @@ const Menu = () => {
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await fetch('http://localhost:3000/menu');
+        const response = await fetch('http://localhost:5000/menu');
         const data = await response.json();
         setMenuItems(data);
       } catch (error) {
@@ -24,7 +24,7 @@ const Menu = () => {
   const handleAddItem = async () => {
     if (newItem.name && newItem.price) {
       try {
-        const response = await fetch('http://localhost:3000/menu', {
+        const response = await fetch('http://localhost:5000/menu', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ const Menu = () => {
 
   const handleSaveEdit = async (index) => {
     try {
-      const response = await fetch(`http://localhost:3000/menu/${menuItems[index]._id}`, {
+      const response = await fetch(`http://localhost:5000/menu/${menuItems[index]._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ const handleEditItem = (index) => {
 
   const handleRemoveItem = async (index) => {
     try {
-      const response = await fetch(`http://localhost:3000/menu/${menuItems[index]._id}`, {
+      const response = await fetch(`http://localhost:5000/menu/${menuItems[index]._id}`, {
         method: 'DELETE',
       });
       if (response.ok) {

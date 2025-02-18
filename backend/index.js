@@ -1,6 +1,8 @@
 import express from 'express';
+import  http from "http";
 import mongoose from 'mongoose';
 import cors from 'cors';
+import {Server} from "socket.io";
 import menuRoutes from './routes/menuRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import bodyParser from 'body-parser';
@@ -11,16 +13,17 @@ import dotenv from 'dotenv';
 dotenv.config(); 
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
-app.use(express.json());
 
+app.use(express.json());
 app.use(bodyParser.json());
 app.use(cors());
 mongoose
     .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/canteen_ms")
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.error("MongoDB connection error:", err));
-
+    
 app.use('/auth', authRoutes);
 app.use('/menu',menuRoutes);
 app.use('/orders',orderRoutes);

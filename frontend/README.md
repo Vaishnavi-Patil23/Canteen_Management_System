@@ -76,6 +76,5 @@ Email: customer1@gmail.com
 Password: 123
 
 Owner/Admin Signin Id:
-Name: Customer1
 Email: owner@canteen.com
 Password: owner123

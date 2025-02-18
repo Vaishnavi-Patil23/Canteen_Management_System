@@ -1,133 +1,189 @@
-// CustomerMessaging.js
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import styled from 'styled-components';
+import { useEffect, useState } from "react";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { FaRegMessage } from "react-icons/fa6";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-`;
 
-const TextArea = styled.textarea`
-  width: 300px;
-  height: 100px;
-  padding: 10px;
-  margin-bottom: 10px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  resize: none;
-`;
+function CustomerChat() {
+    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState("");
+    const [loading, setLoading] = useState(true);
 
-const Button = styled.button`
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
+    const customerId = localStorage.getItem("userId");
 
-const MessageList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin-top: 20px;
-  width: 100%;
-  max-width: 400px;
-`;
+    useEffect(() => {
+        const fetchMessages = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/chat/getCustomerMessages/${customerId}`);
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    setMessages(data);
+                } else {
+                    console.error("Unexpected response:", data);
+                    setMessages([]);
+                }
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching messages:", error);
+                setLoading(false);
+            }
+        };
 
-const MessageItem = styled.li`
-  background-color: #f0f0f0;
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
+        fetchMessages();
+        const interval = setInterval(fetchMessages,100); // Poll every 3 seconds
 
-const Error = styled.div`
-  color: red;
-  margin-top: 10px;
-`;
+        return () => clearInterval(interval); // Cleanup
+    }, [customerId]);
 
-const CustomerMessaging = () => {
-  const [content, setContent] = useState('');
-  const [messages, setMessages] = useState([]);
-  const [error, setError] = useState('');
+    const sendMessage = async () => {
+        if (newMessage.trim() === "") return;
 
-  // Fetch messages when the component loads
-  useEffect(() => {
-    const fetchMessages = async () => {
-      const userId = localStorage.getItem('userId'); // Directly get userId from localStorage
-      if (!userId) {
-        setError('User ID not found. Please log in.');
-        return;
-      }
+        const messageData = { customerId: customerId, text: newMessage };
 
-      try {
-        const response = await axios.get(`/chat/customer/${userId}`);
-        setMessages(response.data);
-      } catch (error) {
-        setError('Error fetching messages');
-      }
+        try {
+            const response = await fetch("http://localhost:5000/chat/sendMessage", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(messageData),
+            });
+
+            const savedMessage = await response.json();
+            setMessages((prev) => [...prev, savedMessage]); // Update UI
+            setNewMessage(""); // Clear input
+        } catch (error) {
+            console.error("Error sending message:", error);
+        }
     };
-    fetchMessages();
-  }, []);
 
-  // Send a new message
-  const sendMessage = async () => {
-    if (!content.trim()) {
-      setError('Message content cannot be empty.');
-      return;
-    }
+    const deleteMessage = async (messageId) => {
+        try {
+            const response = await fetch(`http://localhost:5000/chat/deleteMessage/${messageId}`, {
+                method: "DELETE",
+            });
 
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
-      setError('User ID not found. Please log in.');
-      return;
-    }
+            if (response.ok) {
+                setMessages((prevMessages) =>
+                    prevMessages.filter((message) => message._id !== messageId)
+                );
+            } else {
+                console.error("Failed to delete message");
+            }
+        } catch (error) {
+            console.error("Error deleting message:", error);
+        }
+    };
 
-    try {
-      await axios.post('/chat/send', { userId, content }); // Send the message with userId
-      setContent('');
-      setError('');
+    return (
+      <div style={styles.container}>
+        <div style={styles.chatContainer}>
+            <h3>Anonymous Feedback <FaRegMessage/> </h3>
+            <br></br>
+            {loading ? <p>Loading messages...</p> : (
+                <div style={styles.messagesContainer}>
+                    {messages.length === 0 ? (
+                        <p>No messages yet.</p>
+                    ) : (
+                        messages.map((msg, index) => (
+                            <div key={msg._id} style={styles.message}>
+                                <div style={styles.messageText}>{msg.text}</div>
+                                <button
+                                    onClick={() => deleteMessage(msg._id)}
+                                    style={styles.deleteButton}
+                                >
+                                    <RiDeleteBin5Line/>
+                                </button>
+                            </div>
+                        ))
+                    )}
+                </div>
+            )}
+            <div style={styles.inputContainer}>
+                <input
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Type a message..."
+                    style={styles.input}
+                />
+                <button onClick={sendMessage} style={styles.sendButton}>Send</button>
+            </div>
+        </div>
+        </div>
+    );
+}
 
-      // Fetch updated messages after sending
-      const updatedMessages = await axios.get(`/chat/customer/${userId}`);
-      setMessages(updatedMessages.data);
-    } catch (error) {
-      setError('Error sending message. Please try again.');
-    }
-  };
-
-  return (
-    <Container>
-      <h2>Send a Message</h2>
-      <TextArea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        placeholder="Enter your message"
-      />
-      <Button onClick={sendMessage}>Send Message</Button>
-      {error && <Error>{error}</Error>}
-
-      <h2>Your Messages</h2>
-      <MessageList>
-        {messages.map((message) => (
-          <MessageItem key={message._id}>
-            {message.content}
-            <small>{new Date(message.timestamp).toLocaleString()}</small>
-          </MessageItem>
-        ))}
-      </MessageList>
-    </Container>
-  );
+const styles = {
+  container: {
+    display: "flex",
+    justifyContent: "center",  
+    alignItems: "center",      
+    height: "100vh",        
+},
+    chatContainer: {
+        width: "100%",
+        maxWidth: "600px",
+        backgroundColor: "#fff",
+        padding: "20px",
+        borderRadius: "10px",
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+        display: "flex",
+        flexDirection: "column",
+        height: "90%",
+    },
+    messagesContainer: {
+        flexGrow: 1,
+        overflowY: "auto",
+        paddingRight: "20px",
+    },
+    message: {
+        marginBottom: "12px",
+        padding: "12px",
+        borderRadius: "10px",
+        backgroundColor: "#e1f5fe",
+        maxWidth: "80%",
+        marginLeft: "auto",
+        marginRight: "0",
+        wordWrap: "break-word",
+        position: "relative",
+    },
+    messageText: {
+        fontSize: "14px",
+        color: "#333",
+    },
+    deleteButton: {
+        position: "absolute",
+        top: "10px",
+        right: "5px",
+        background: "none",
+        border: "none",
+        fontSize: "18px",
+        // color: "#ff4d4d",
+        cursor: "pointer",
+        transition: "color 0.3s ease",
+    },
+    inputContainer: {
+        display: "flex",
+        gap: "10px",
+        alignItems: "center",
+    },
+    input: {
+        flex: "1",
+        padding: "12px",
+        border: "2px solid #ccc",
+        borderRadius: "25px",
+        outline: "none",
+        fontSize: "16px",
+        color: "#333",
+        transition: "border 0.3s ease",
+    },
+    sendButton: {
+        backgroundColor: "#007bff",
+        color: "#fff",
+        padding: "12px 18px",
+        border: "none",
+        borderRadius: "25px",
+        cursor: "pointer",
+        transition: "background-color 0.3s ease",
+    },
 };
 
-export default CustomerMessaging;
+export default CustomerChat;

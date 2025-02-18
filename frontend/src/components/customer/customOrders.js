@@ -17,7 +17,7 @@ const OrderPage = () => {
     const fetchOrders = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:3000/orders/${userId}`);
+        const response = await fetch(`http://localhost:5000/orders/${userId}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -56,7 +56,7 @@ const OrderPage = () => {
   const handleRemoveItem = async (id) => {
     try {
 
-      await axios.delete(`http://localhost:3000/orders/${id}`);
+      await axios.delete(`http://localhost:5000/orders/${id}`);
 
       const updatedOrders = orders.filter(order => order._id !== id);
       setOrders(updatedOrders);
@@ -110,11 +110,11 @@ const OrderPage = () => {
           <h3>Payment Details</h3>
           <label>
             Name:
-            <input type="text" value={userProfile.name} readOnly style={styles.input} />
+            <input type="text" value={userProfile.name}  style={styles.input} />
           </label>
           <label>
             Total Amount:
-            <input type="text" value={`${calculateTotal()}`} readOnly style={styles.input} />
+            <input type="text" value={`${calculateTotal()}`} style={styles.input} />
           </label>
           <button type="submit" style={styles.submitButton}>Pay</button>
         </form>

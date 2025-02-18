@@ -10,7 +10,7 @@ function App() {
 
   const fetchAnnouncements = async () => {
     try {
-      const response = await fetch('http://localhost:3000/announcements');
+      const response = await fetch('http://localhost:5000/announcements');
       const data = await response.json();
       setAnnouncementsList(data);
     } catch (error) {
@@ -20,7 +20,7 @@ function App() {
 
   const handlePostAnnouncement = async () => {
     try {
-      const response = await fetch('http://localhost:3000/announcements', {
+      const response = await fetch('http://localhost:5000/announcements', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ function App() {
 
   const handleDeleteAnnouncement = async (id) => {
     try {
-      await fetch(`http://localhost:3000/announcements/${id}`, {
+      await fetch(`http://localhost:5000/announcements/${id}`, {
         method: 'DELETE',
       });
       fetchAnnouncements(); 

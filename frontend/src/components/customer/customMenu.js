@@ -13,7 +13,7 @@ const MenuPage = () => {
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await fetch('http://localhost:3000/menu');
+        const response = await fetch('http://localhost:5000/menu');
         if (!response.ok) {
           throw new Error(`Error fetching menu items: ${response.status} ${response.statusText}`);
         }
@@ -65,7 +65,7 @@ const MenuPage = () => {
     }));
 
     try {
-      const response = await fetch('http://localhost:3000/orders', {
+      const response = await fetch('http://localhost:5000/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,41 +1,68 @@
 import express from 'express';
-import Message from '../models/Message.js'; // Adjust the path as necessary
-
+import {Message} from '../models/Message.js'; // Adjust the path as necessary
 const router = express.Router();
 
-// Send a message
-router.post('/send', async (req, res) => {
+router.post("/sendMessage", async (req, res) => {
   try {
-    const { content } = req.body;
-    if (!content) {
-      return res.status(400).json({ error: 'Message content is required' });
-    }
+      const { customerId, text } = req.body; // Get data from request
 
-    const newMessage = new Message({ customerId: req.user._id, content });
-    await newMessage.save();
-    res.status(201).json({ message: 'Message sent successfully' });
+      if (!customerId || !text) {
+          return res.status(400).json({ error: "customerId and text are required" });
+      }
+
+      const newMessage = new Message({ 
+        customerId:customerId , 
+        text 
+    });
+      await newMessage.save();
+
+      res.status(201).json({ message: "Message saved", data: newMessage });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to send message, please try again later' });
+      console.error("Error saving message:", error);
+      res.status(500).json({ error: "Server error" });
   }
 });
 
-// Get messages for a specific customer
-router.get('/customer/:id', async (req, res) => {
-  try {
-    const messages = await Message.find({ customerId: req.user._id });
-    res.status(200).json(messages);
-  } catch (error) {
-    res.status(500).json({ error: 'Error fetching messages' });
-  }
+router.post("/sendReply", async (req, res) => {
+  const { messageId, reply } = req.body;
+  await Message.findByIdAndUpdate(messageId, { reply });
+  res.json({ success: true });
 });
 
-// Get all messages for the owner (anonymous view)
-router.get('/owner', async (req, res) => {
+router.get("/getAllMessages", async (req, res) => {
   try {
-    const messages = await Message.find().select('content timestamp'); // Exclude customerId
-    res.status(200).json(messages);
+    const messages = await Message.find().sort('timestamp');
+    res.json(messages);
+} catch (error) {
+  console.error("Error fetching messages:", error);
+  res.status(500).json({ error: "Internal Server Error" });
+}
+});
+
+router.get("/getCustomerMessages/:customerId", async (req, res) => {
+  try {
+    const messages = await Message.find({ customerId: req.params.customerId }).sort('timestamp');
+    res.json(messages);
+} catch (error) {
+    res.status(500).json({ error: error.message });
+}
+});
+
+router.delete("/deleteMessage/:id", async (req, res) => {
+  const messageId = req.params.id;
+
+  try {
+      // Delete message by its ID
+      const deletedMessage = await Message.findByIdAndDelete(messageId);
+
+      if (!deletedMessage) {
+          return res.status(404).json({ message: "Message not found" });
+      }
+
+      res.status(200).json({ message: "Message deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching messages' });
+      console.error("Error deleting message:", error);
+      res.status(500).json({ message: "Server error" });
   }
 });
 

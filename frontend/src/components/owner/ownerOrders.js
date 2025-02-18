@@ -8,7 +8,7 @@ const OwnerDashboard = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/orders');
+        const response = await axios.get('http://localhost:5000/orders');
         if (Array.isArray(response.data)) {
           setOrders(response.data);
         } else {
@@ -28,7 +28,7 @@ const OwnerDashboard = () => {
     try {
       // console.log("Updating Order:", orderId, "Item:", itemId, "New Status:", newStatus);
 
-      const response = await fetch(`http://localhost:3000/orders/items/${itemId}`, {
+      const response = await fetch(`http://localhost:5000/orders/items/${itemId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

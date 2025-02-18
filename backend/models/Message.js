@@ -1,10 +1,10 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const messageSchema = new mongoose.Schema({
-  customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  content: { type: String, required: true },
-  timestamp: { type: Date, default: Date.now }
+  customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer' }, // Reference to Customer ID
+  text: String,
+  createdAt: { type: Date, default: Date.now }, 
 });
 
-const Message = mongoose.model('Message', messageSchema);
-export default Message; // Use default export
+export const Message = mongoose.model('Message', messageSchema);
+

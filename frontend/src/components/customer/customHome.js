@@ -8,7 +8,7 @@ function CustomerHome() {
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
-        const response = await fetch('http://localhost:3000/announcements');
+        const response = await fetch('http://localhost:5000/announcements');
         const data = await response.json();
         setAnnouncements(data);
       } catch (error) {
@@ -22,7 +22,7 @@ function CustomerHome() {
   useEffect(() => {
     const fetchShopStatus = async () => {
         try {
-            const response = await fetch('http://localhost:3000/shop-status');
+            const response = await fetch('http://localhost:5000/shop-status');
             const data = await response.json();
             setIsShopOpen(data.isOpen);
         } catch (error) {
