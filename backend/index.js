@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(cors());
 mongoose
-    .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/canteen_ms")
+    .connect(process.env.MONGO_URI || "mongodb://localhost:27017/canteen_ms")
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.error("MongoDB connection error:", err));
     
