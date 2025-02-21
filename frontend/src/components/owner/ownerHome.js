@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 function App() {
   const [announcement, setAnnouncement] = useState('');
   const [announcementsList, setAnnouncementsList] = useState([]);
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
 
   useEffect(() => {
     fetchAnnouncements();

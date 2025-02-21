@@ -4,7 +4,7 @@ function CustomerHome() {
   const [announcements, setAnnouncements] = useState([]);
   const [isShopOpen, setIsShopOpen] = useState(true); 
   // const role = localStorage.getItem('userRole');
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL ||  "http://localhost:5000";
 
   useEffect(() => {
     const fetchAnnouncements = async () => {

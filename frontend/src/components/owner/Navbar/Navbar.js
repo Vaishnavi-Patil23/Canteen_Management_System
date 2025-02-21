@@ -6,7 +6,7 @@ const Navbar = ({ role,setContentClass, onLogout }) => {
   const location = useLocation();
   const [navPosition, setNavPosition] = useState("top");
   const [status, setStatus] = useState("Open");
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
 
 
   useEffect(() => {

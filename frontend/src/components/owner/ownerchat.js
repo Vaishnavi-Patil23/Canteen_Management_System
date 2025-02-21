@@ -5,7 +5,7 @@ import { FaRegMessage } from "react-icons/fa6";
 function OwnerChat() {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
 
     const ownerId = localStorage.getItem("userId");
 

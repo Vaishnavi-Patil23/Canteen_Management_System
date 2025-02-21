@@ -6,7 +6,7 @@ const Menu = () => {
   const [newItem, setNewItem] = useState({ name: '', price: '', available: true });
   const [editItem, setEditItem] = useState(null);
   const [isEditing, setIsEditing] = useState(null);
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
 
 
   useEffect(() => {

@@ -6,7 +6,7 @@ const OrderPage = () => {
   const [loading, setLoading] = useState(true);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
 
     
     const userProfile = {
@@ -111,11 +111,11 @@ const OrderPage = () => {
           <h3>Payment Details</h3>
           <label>
             Name:
-            <input type="text" value={userProfile.name}  style={styles.input} />
+            <input type="text" style={styles.input} />
           </label>
           <label>
             Total Amount:
-            <input type="text" value={`${calculateTotal()}`} style={styles.input} />
+            <input type="text"  style={styles.input} />
           </label>
           <button type="submit" style={styles.submitButton}>Pay</button>
         </form>
