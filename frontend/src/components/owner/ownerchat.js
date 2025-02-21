@@ -5,13 +5,14 @@ import { FaRegMessage } from "react-icons/fa6";
 function OwnerChat() {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
     const ownerId = localStorage.getItem("userId");
 
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/chat/getAllMessages`);
+                const response = await fetch(`${BACKEND_URL}/chat/getAllMessages`);
                 const data = await response.json();
                 if (Array.isArray(data)) {
                     setMessages(data);
@@ -34,7 +35,7 @@ function OwnerChat() {
 
     const deleteMessage = async (messageId) => {
         try {
-            const response = await fetch(`http://localhost:5000/chat/deleteMessage/${messageId}`, {
+            const response = await fetch(`${BACKEND_URL}/chat/deleteMessage/${messageId}`, {
                 method: "DELETE",
             });
 

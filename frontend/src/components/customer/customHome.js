@@ -4,11 +4,12 @@ function CustomerHome() {
   const [announcements, setAnnouncements] = useState([]);
   const [isShopOpen, setIsShopOpen] = useState(true); 
   // const role = localStorage.getItem('userRole');
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
-        const response = await fetch('http://localhost:5000/announcements');
+        const response = await fetch(`${BACKEND_URL}/announcements`);
         const data = await response.json();
         setAnnouncements(data);
       } catch (error) {
@@ -22,7 +23,7 @@ function CustomerHome() {
   useEffect(() => {
     const fetchShopStatus = async () => {
         try {
-            const response = await fetch('http://localhost:5000/shop-status');
+            const response = await fetch(`${BACKEND_URL}/shop-status`);
             const data = await response.json();
             setIsShopOpen(data.isOpen);
         } catch (error) {

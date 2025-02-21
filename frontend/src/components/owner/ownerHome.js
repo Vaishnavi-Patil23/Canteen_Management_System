@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 function App() {
   const [announcement, setAnnouncement] = useState('');
   const [announcementsList, setAnnouncementsList] = useState([]);
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     fetchAnnouncements();
@@ -10,7 +11,7 @@ function App() {
 
   const fetchAnnouncements = async () => {
     try {
-      const response = await fetch('http://localhost:5000/announcements');
+      const response = await fetch(`${BACKEND_URL}/announcements`);
       const data = await response.json();
       setAnnouncementsList(data);
     } catch (error) {
@@ -20,7 +21,7 @@ function App() {
 
   const handlePostAnnouncement = async () => {
     try {
-      const response = await fetch('http://localhost:5000/announcements', {
+      const response = await fetch(`${BACKEND_URL}/announcements`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,7 +41,7 @@ function App() {
 
   const handleDeleteAnnouncement = async (id) => {
     try {
-      await fetch(`http://localhost:5000/announcements/${id}`, {
+      await fetch(`${BACKEND_URL}/announcements/${id}`, {
         method: 'DELETE',
       });
       fetchAnnouncements(); 
@@ -119,7 +120,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '100vh',
+    height: '115vh',
     background: 'linear-gradient(135deg, #ff6b6b, #ffcc00)',
     color: '#fff',
     textAlign: 'center',

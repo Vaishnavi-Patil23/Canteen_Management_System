@@ -73,26 +73,21 @@ router.get('/:userId', async (req, res) => {
   }
 });
 
-
 router.put('/items/:itemId', async (req, res) => {
   const { itemId } = req.params;
   const { newStatus } = req.body;
 
   try {
     const order = await Order.findOne({  "items._id": itemId  });
-
       if (!order) {
           return res.status(404).json({ message: "Order not found." });
       }
-
       const item = order.items.find(item => item._id.toString() === itemId);
       if (!item) {
           return res.status(404).json({ message: "Item not found in this order." });
       }
-
       item.status = newStatus; 
       await order.save(); 
-
       return res.status(200).json({ message: "Status updated successfully", order });
   } catch (error) {
       return res.status(500).json({ message: "Server error", error });

@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import {jwtDecode} from "jwt-decode";
 
 const Login = () => {
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
   const [loginData, setLoginData] = useState({
     email: '',
     password: '',
@@ -22,7 +24,7 @@ const Login = () => {
     e.preventDefault();
     
     try {
-        const response = await fetch('http://localhost:5000/auth/signin', {
+        const response = await fetch(`${BACKEND_URL}/auth/signin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

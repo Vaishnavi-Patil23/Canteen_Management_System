@@ -2,7 +2,7 @@ import express from 'express';
 import  http from "http";
 import mongoose from 'mongoose';
 import cors from 'cors';
-import {Server} from "socket.io";
+// import {Server} from "socket.io";
 import menuRoutes from './routes/menuRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import bodyParser from 'body-parser';
@@ -14,7 +14,7 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(bodyParser.json());

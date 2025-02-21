@@ -6,25 +6,26 @@ const Menu = () => {
   const [newItem, setNewItem] = useState({ name: '', price: '', available: true });
   const [editItem, setEditItem] = useState(null);
   const [isEditing, setIsEditing] = useState(null);
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await fetch('http://localhost:5000/menu');
+        const response = await fetch(`${BACKEND_URL}/menu`);
         const data = await response.json();
         setMenuItems(data);
       } catch (error) {
         console.error('Error fetching menu items:', error);
       }
     };
-
     fetchMenuItems();
   }, []);
 
   const handleAddItem = async () => {
     if (newItem.name && newItem.price) {
       try {
-        const response = await fetch('http://localhost:5000/menu', {
+        const response = await fetch(`${BACKEND_URL}/menu`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -42,7 +43,7 @@ const Menu = () => {
 
   const handleSaveEdit = async (index) => {
     try {
-      const response = await fetch(`http://localhost:5000/menu/${menuItems[index]._id}`, {
+      const response = await fetch(`${BACKEND_URL}/menu/${menuItems[index]._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +69,7 @@ const handleEditItem = (index) => {
 
   const handleRemoveItem = async (index) => {
     try {
-      const response = await fetch(`http://localhost:5000/menu/${menuItems[index]._id}`, {
+      const response = await fetch(`${BACKEND_URL}/menu/${menuItems[index]._id}`, {
         method: 'DELETE',
       });
       if (response.ok) {

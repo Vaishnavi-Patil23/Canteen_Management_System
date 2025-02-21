@@ -1,45 +1,70 @@
+/* Base Navbar Styling */
 .navbar {
   position: fixed;
-  background-color: #333;
+  background-color: #2c3e50;  /* Dark Blue Shade */
   color: white;
-  padding: 10px;
+  padding: 12px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: all 0.3s ease;
-  z-index: 999;
+  z-index: 1000;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
-
+.logo {
+  font-size: 18px;  /* Bigger Size */
+  color:rgb(255, 171, 62);
+  font-weight: bold;  /* Bolder Look */
+  font-family: 'Poppins', sans-serif;  /* Stylish Font */
+  letter-spacing: 1px;  /* Slight Spacing for a Modern Feel */
+  /* text-transform: uppercase; */
+}
+/* Navbar positioned at the top */
 .navbar.top {
   width: 100%;
   flex-direction: row;
 }
 
+/* Navbar positioned on the left */
 .navbar.left {
-  height: 100%;
-  width: 200px;
+  height: 100vh;
+  width: 220px;
   flex-direction: column;
   align-items: flex-start;
   top: 0;
   left: 0;
   padding-top: 20px;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Navbar Links */
 .navbar a {
   color: white;
-  padding: 10px;
+  padding: 12px 15px;
   text-decoration: none;
   display: block;
+  font-size: 16px;
+  transition: background 0.3s ease, transform 0.2s;
+  border-radius: 5px;
 }
 
+/* Hover Effect for Navbar Links */
+.navbar a:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+/* Responsive Content Margins */
 .content {
-  margin-top: 50px;
+  margin-top: 60px;
+  transition: margin 0.3s ease;
 }
 
 .content.with-margin {
-  margin-left: 200px;
+  margin-left: 220px;
 }
 
+/* Status Box Styling */
 .status-box {
   padding: 10px 20px;
   border-radius: 4px;
@@ -50,6 +75,7 @@
   border: 1px solid #ccc;
 }
 
+
 .status-box.open {
   background-color: #a5d6a7;
   border-color: #81c784;
@@ -58,4 +84,40 @@
 .status-box.close {
   background-color: #ef9a9a;
   border-color: #e57373;
+}
+
+/* Hover effect for status box */
+.status-box:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: row;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .navbar.left {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .navbar a {
+    padding: 10px;
+  }
+
+  .status-box {
+    padding: 8px 15px;
+  }
+
+  .content.with-margin {
+    margin-left: 0;
+  }
 }

@@ -6,6 +6,7 @@ const OrderPage = () => {
   const [loading, setLoading] = useState(true);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
     
     const userProfile = {
@@ -17,7 +18,7 @@ const OrderPage = () => {
     const fetchOrders = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:5000/orders/${userId}`);
+        const response = await fetch(`${BACKEND_URL}/orders/${userId}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -56,7 +57,7 @@ const OrderPage = () => {
   const handleRemoveItem = async (id) => {
     try {
 
-      await axios.delete(`http://localhost:5000/orders/${id}`);
+      await axios.delete(`${BACKEND_URL}/orders/${id}`);
 
       const updatedOrders = orders.filter(order => order._id !== id);
       setOrders(updatedOrders);

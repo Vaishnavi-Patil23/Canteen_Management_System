@@ -6,6 +6,8 @@ const Navbar = ({ role,setContentClass, onLogout }) => {
   const location = useLocation();
   const [navPosition, setNavPosition] = useState("top");
   const [status, setStatus] = useState("Open");
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 
   useEffect(() => {
     if (location.pathname === "/owner-home" || location.pathname === "/customer-home") {
@@ -20,7 +22,7 @@ const Navbar = ({ role,setContentClass, onLogout }) => {
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const response = await fetch("http://localhost:5000/shop-status");
+        const response = await fetch(`${BACKEND_URL}/shop-status`);
         if (response.ok) {
           const data = await response.json();
           setStatus(data.isOpen ? "Open" : "Close");
@@ -35,7 +37,7 @@ const Navbar = ({ role,setContentClass, onLogout }) => {
 
   const toggleStatus = async () => {
     try {
-      const response = await fetch("http://localhost:5000/shop-status/toggle", {
+      const response = await fetch(`${BACKEND_URL}/shop-status/toggle`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });

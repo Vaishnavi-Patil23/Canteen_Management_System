@@ -9,11 +9,11 @@ function CustomerChat() {
     const [loading, setLoading] = useState(true);
 
     const customerId = localStorage.getItem("userId");
-
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/chat/getCustomerMessages/${customerId}`);
+                const response = await fetch(`${BACKEND_URL}/chat/getCustomerMessages/${customerId}`);
                 const data = await response.json();
                 if (Array.isArray(data)) {
                     setMessages(data);
@@ -40,7 +40,7 @@ function CustomerChat() {
         const messageData = { customerId: customerId, text: newMessage };
 
         try {
-            const response = await fetch("http://localhost:5000/chat/sendMessage", {
+            const response = await fetch(`${BACKEND_URL}/chat/sendMessage`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(messageData),
@@ -56,7 +56,7 @@ function CustomerChat() {
 
     const deleteMessage = async (messageId) => {
         try {
-            const response = await fetch(`http://localhost:5000/chat/deleteMessage/${messageId}`, {
+            const response = await fetch(`${BACKEND_URL}/chat/deleteMessage/${messageId}`, {
                 method: "DELETE",
             });
 

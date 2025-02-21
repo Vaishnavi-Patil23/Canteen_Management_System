@@ -23,11 +23,6 @@ router.post("/sendMessage", async (req, res) => {
   }
 });
 
-router.post("/sendReply", async (req, res) => {
-  const { messageId, reply } = req.body;
-  await Message.findByIdAndUpdate(messageId, { reply });
-  res.json({ success: true });
-});
 
 router.get("/getAllMessages", async (req, res) => {
   try {
@@ -52,7 +47,6 @@ router.delete("/deleteMessage/:id", async (req, res) => {
   const messageId = req.params.id;
 
   try {
-      // Delete message by its ID
       const deletedMessage = await Message.findByIdAndDelete(messageId);
 
       if (!deletedMessage) {

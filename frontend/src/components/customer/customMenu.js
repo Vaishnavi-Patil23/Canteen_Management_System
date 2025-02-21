@@ -5,6 +5,8 @@ const MenuPage = () => {
   const [order, setOrder] = useState([]);
   const [loading, setLoading] = useState(true);
   const [quantities, setQuantities] = useState({});
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 
   const userProfile = {
     name: localStorage.getItem('userName') || 'Guest', 
@@ -13,7 +15,7 @@ const MenuPage = () => {
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await fetch('http://localhost:5000/menu');
+        const response = await fetch(`${BACKEND_URL}/menu`);
         if (!response.ok) {
           throw new Error(`Error fetching menu items: ${response.status} ${response.statusText}`);
         }
@@ -65,7 +67,7 @@ const MenuPage = () => {
     }));
 
     try {
-      const response = await fetch('http://localhost:5000/orders', {
+      const response = await fetch(`${BACKEND_URL}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

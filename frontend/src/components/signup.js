@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom'; // Import useNavigate for redirection
 
 const Signup = () => {
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
   const [signupData, setSignupData] = useState({
     name: '',
     email: '',
@@ -28,7 +30,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/auth/signup', {
+      const response = await fetch(`${BACKEND_URL}/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

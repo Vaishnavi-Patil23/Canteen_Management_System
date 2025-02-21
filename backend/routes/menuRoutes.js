@@ -1,4 +1,4 @@
-// routes/menuRoutes.js
+
 import express from 'express';
 import Menu from '../models/Menu.js';
 const router = express.Router();
@@ -12,7 +12,6 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 
 router.post('/', async (req, res) => {
   const { name, price, available } = req.body;

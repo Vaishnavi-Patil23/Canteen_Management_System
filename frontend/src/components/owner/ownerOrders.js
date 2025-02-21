@@ -4,11 +4,12 @@ import axios from 'axios';
 const OwnerDashboard = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/orders');
+        const response = await axios.get(`${BACKEND_URL}/orders`);
         if (Array.isArray(response.data)) {
           setOrders(response.data);
         } else {
@@ -26,9 +27,8 @@ const OwnerDashboard = () => {
 
   const handleStatusChange = async (userId, itemId, newStatus) => {
     try {
-      // console.log("Updating Order:", orderId, "Item:", itemId, "New Status:", newStatus);
 
-      const response = await fetch(`http://localhost:5000/orders/items/${itemId}`, {
+      const response = await fetch(`${BACKEND_URL}/orders/items/${itemId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
