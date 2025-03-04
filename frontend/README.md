@@ -70,6 +70,15 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
 
+To run frontend:
+cd frontend
+npm start
+
+To run backend:
+cd backend
+node index.js
+
+
 Customer Signin ID:
 Name: Customer1
 Email: customer1@gmail.com
