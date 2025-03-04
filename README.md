@@ -44,25 +44,25 @@ The **Canteen Management System** is a MERN stack-based web application that fac
 
 2. **Install dependencies:**
    - Frontend:
-     cd frontend
+     cd frontend;
      npm install
 
    - Backend:
-     cd backend
+     cd backend;
      npm install
 
 3. **Set up environment variables:**
    - Create a `.env` file in the backend directory and add:
-     MONGO_URI=mongodb+srv://vp657741:SnQNRnb3YuIWwU2T@canteenmanagementsys.shftc.mongodb.net/?retryWrites=true&w=majority&appName=CanteenManagementSys
+     MONGO_URI=mongodb+srv://vp657741:SnQNRnb3YuIWwU2T@canteenmanagementsys.shftc.mongodb.net/?retryWrites=true&w=majority&appName=CanteenManagementSys ;
      JWT_SECRET="CanteenProject"
 
 4. **Run the application:**
    - Start backend server:
-     cd backend
+     cd backend ;
      node index.js
 
    - Start frontend server:
-     cd frontend
+     cd frontend ;
      npm start
 
 5. **Access the application:**
@@ -73,12 +73,12 @@ The **Canteen Management System** is a MERN stack-based web application that fac
 - Add a rating and review system for menu items
 - Implement real-time order tracking using WebSockets
 
-6. **Some important Creadentials for use**
-  Customer Signin ID:
-  Name: Customer1
-  Email: customer1@gmail.com
+6. **Some important Creadentials for use:**
+Customer Signin ID-
+  Name: Customer1;
+  Email: customer1@gmail.com;
   Password: 123
   
-  Owner/Admin Signin Id:
-  Email: owner@canteen.com
+Owner/Admin Signin ID-
+  Email: owner@canteen.com;
   Password: owner123
